@@ -1,27 +1,30 @@
 package br.sc.senac.returnit.entidade.usuario;
+import Contato;
+import Endereco;
 
+public abstract class Usuario {
 
-public class Usuario {
-
-	private Long id;
+	private long id;
 	private String nome;
-	private String cpf;
-	private String genero;
-	private Long endereco;
-	public Long getId() {
-		return id;
-	}
-	public Usuario(Long id, String nome, String cpf, String genero, Long endereco) {
+	private Endereco endereco;
+	private Contato contato;
+	private String senha;
+	
+	
+	
+	public Usuario(long id, String nome, Endereco endereco, Contato contato, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.cpf = cpf;	
-		this.genero = genero;
 		this.endereco = endereco;
+		this.contato = contato;
+		this.senha = senha;
 	}
 	
-	
-	public void setId(Long id) {
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getNome() {
@@ -30,22 +33,23 @@ public class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getCpf() {
-		return cpf;
-	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public String getGenero() {
-		return genero;
-	}
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-	public Long getEndereco() {
+	public Endereco getEndereco() {
 		return endereco;
 	}
-	public void setEndereco(Long endereco) {
+	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
+	public Contato getContato() {
+		return contato;
+	}
+	public void setContato(Contato contato) {
+		this.contato = contato;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 }

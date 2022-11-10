@@ -1,5 +1,7 @@
 import java.time.LocalDateTime;
 
+import br.sc.senac.returnit.entidade.usuario.Usuario;
+
 public class Deposito {
 
 	public Deposito(Colaborador colaborador, Usuario usuario, LocalDateTime data, Retornavel retornavel) {

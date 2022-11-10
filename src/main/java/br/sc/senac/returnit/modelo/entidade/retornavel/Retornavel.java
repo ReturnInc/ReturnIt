@@ -1,18 +1,20 @@
-
+package br.sc.senac.returnit.modelo.entidade.retornavel;
+import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
+import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 public class Retornavel {
 
-	public Retornavel(String marca, String modelo, Empresa empresa, String material, int ponto, int preco) {
+	public Retornavel(String marca, String modelo, String cnpjEmpresa, String material, int ponto, int preco) {
 		super();
 		this.marca = marca;
 		this.modelo = modelo;
-		this.empresa = empresa;
+		this.cnpjEmpresa = cnpjEmpresa;
 		this.material = material;
 		this.ponto = ponto;
 		this.preco = preco;
 	}
 	private String marca;
 	private String modelo;
-	private Empresa empresa;
+	private String cnpjEmpresa;
 	private String material;
 	private int ponto;
 	private int preco;
@@ -29,10 +31,11 @@ public class Retornavel {
 		this.modelo = modelo;
 	}
 	public Empresa getEmpresa() {
+		Empresa empresa = EmpresaDAOImp.recuperarEmpresaPorCnpj(cnpjEmpresa);
 		return empresa;
 	}
 	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
+		this.cnpjEmpresa = Empresa.getCnpj();
 	}
 	public String getMaterial() {
 		return material;

@@ -2,9 +2,9 @@ package br.sc.senac.returnit.modelo.entidade.usuario;
 import br.sc.senac.returnit.modelo.entidade.contato.*;
 import br.sc.senac.returnit.modelo.entidade.endereco.*;
 
-public abstract class Usuario {
+public class Usuario {
 
-	private long id;
+	private long idUsuario;
 	private String nome;
 	private Endereco endereco;
 	private Contato contato;
@@ -12,9 +12,8 @@ public abstract class Usuario {
 	
 	
 	
-	public Usuario(long id, String nome, Endereco endereco, Contato contato, String senha) {
-		super();
-		this.id = id;
+	public Usuario(long idUsuario, String nome, Endereco endereco, Contato contato, String senha) {
+		this.idUsuario = idUsuario;
 		this.nome = nome;
 		this.endereco = endereco;
 		this.contato = contato;
@@ -22,10 +21,10 @@ public abstract class Usuario {
 	}
 	
 	public long getId() {
-		return id;
+		return idUsuario;
 	}
 	public void setId(long id) {
-		this.id = id;
+		this.idUsuario = id;
 	}
 	public String getNome() {
 		return nome;
@@ -33,14 +32,14 @@ public abstract class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public long getEndereco() {
-		return endereco.getIdEndereco();
+	public Endereco getEndereco() {
+		return endereco;
 	}
 	public void setEndereco(Endereco novoEndereco) {
 		this.endereco = novoEndereco;
 	}
-	public long getContato() {
-		return contato.getIdContato();
+	public Contato getContato() {
+		return contato;
 	}
 	public void setContato(Contato contato) {
 		this.contato = contato;

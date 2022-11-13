@@ -15,13 +15,13 @@ import br.sc.senac.returnit.modelo.entidade.usuario.*;
 	    
 	    void atualizarSenhaUsuario(Usuario usuario, String novoSenha);
 
-	    void atualizarContato(Usuario usuario, long novoIdCOntato);
+	    void atualizarContato(Usuario usuario, long novoIdContato);
 
 	    void atualizarEnderecoUsuario(Usuario usuario, long novoIdEndereco);
 
 
 	    List<Usuario> recuperarUsuarios();
 
-	    List<Usuario> recuperarUsuarioId();
+	    Usuario recuperarUsuarioId(Id);
 	    
 }

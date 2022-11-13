@@ -5,13 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-import br.sc.senac.returnit.modelo.dao.usuario.Endereco;
+
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
-import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 public class ContatoDAOImp implements ContatoDAO{
 	
@@ -25,8 +21,8 @@ public class ContatoDAOImp implements ContatoDAO{
 	        conexao = conectarBanco();
 	        insert = conexao.prepareStatement("INSERT INTO contato (telefone_contato, email_contato) VALUES (?,?)");
 	        
-	        insert.setString(1, contato.getTelefoneContato());
-	        insert.setString(2,contato.getEmailContato());
+	        insert.setString(1, contato.getTelefone());
+	        insert.setString(2,contato.getEmail());
 
 	        insert.execute();
 
@@ -58,7 +54,7 @@ public class ContatoDAOImp implements ContatoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        delete = conexao.prepareStatement("DELETE FROM usuario WHERE id = ?");
+	        delete = conexao.prepareStatement("DELETE FROM contato WHERE id_contato = ?");
 
 	        delete.setLong(1, contato.getIdContato());
 
@@ -93,7 +89,7 @@ public class ContatoDAOImp implements ContatoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE contato SET telefone_contato = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE contato SET telefone_contato = ? WHERE id_contato = ?");
 	        
 	        update.setString(1, novoTelefoneContato);
 	        update.setLong(2, contato.getIdContato());
@@ -128,7 +124,7 @@ public class ContatoDAOImp implements ContatoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE contato SET email_contato = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE contato SET email_contato = ? WHERE id_contato = ?");
 	        
 	        update.setString(1, novoEmailContato);
 	        update.setLong(2, contato.getIdContato());
@@ -158,7 +154,7 @@ public class ContatoDAOImp implements ContatoDAO{
 
     public Contato recuperarContatoId(long idContato){
     	Connection conexao = null;
- 	    Statement consulta = null;
+    	PreparedStatement consulta = null;
  	    ResultSet resultado = null;
 
  	    Contato contato = null;
@@ -166,8 +162,9 @@ public class ContatoDAOImp implements ContatoDAO{
  	    try {
 
  	        conexao = conectarBanco();
- 	        consulta = conexao.createStatement();
- 	        resultado = consulta.executeQuery("SELECT * FROM contato");
+ 	        consulta = conexao.prepareStatement("SELECT * FROM contato where id_contato == ? ");
+ 	        consulta.setLong(1, idContato);
+ 	        resultado = consulta.executeQuery();
  	       
  	        String telefoneContato = resultado.getString("telefone_contato");
  	        String emailContato = resultado.getString("email_contato");

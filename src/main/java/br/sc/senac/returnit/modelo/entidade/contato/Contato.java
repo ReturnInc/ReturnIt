@@ -10,10 +10,10 @@ public class Contato {
 	private long idContato;
 	private String telefoneContato;
 	private String emailContato;
-	public String getTelefoneContato() {
+	public String getTelefone() {
 		return telefoneContato;
 	}
-	public void setTelefoneContato(String novoTelefoneContato) {
+	public void setTelefone(String novoTelefoneContato) {
 		this.telefoneContato = novoTelefoneContato;
 	}
 	public String getEmail() {

@@ -14,10 +14,6 @@ public interface EmpresaDAO {
 
 		List<Empresa> recuperarEmpresas();
 
-		List<Empresa> recuperarEmpresasOrdenadosCnpjAscendente();
-
-		List<Empresa> recuperarEmpresasOrdenadosCnpjDescendente();
-
 		List<Empresa> recuperarEmpresasOrdenadosIdUsuarioAscendente();
 
 		List<Empresa> recuperarEmpresasOrdenadosIdUsuarioDescendente();

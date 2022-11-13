@@ -1,6 +1,7 @@
 package br.sc.senac.returnit.modelo.entidade.retornavel;
 import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
+
 public class Retornavel {
 
 	public Retornavel(String marca, String modelo, String cnpjEmpresa, String material, int ponto, int preco) {

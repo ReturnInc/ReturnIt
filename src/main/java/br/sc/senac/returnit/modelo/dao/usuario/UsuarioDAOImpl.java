@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.sc.senac.returnit.entidade.usuario.Usuario;
+import br.sc.senac.returnit.modelo.entidade.usuario.*;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
 	public void inserirUsuario(Usuario usuario) {
@@ -20,13 +20,12 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO usuario (id,nome,cpf,genero,endereco) VALUES (?,?,?,?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO usuario (nome, senha, id_endereco, id_contato) VALUES (?,?,?,?)");
 	        
-	        insert.setLong(1, usuario.getId());
-	        insert.setString(2, usuario.getNome());
-	        insert.setString(3, usuario.getCpf());
-	        insert.setString(4, usuario.getGenero());
-	        insert.setLong(5, usuario.getEndereco());
+	        insert.setString(1, usuario.getNome());
+	        insert.setString(2,usuario.getSenha());
+	        insert.setLong(3, usuario.getEndereco());
+	        insert.setLong(4, usuario.getContato());
 
 	        insert.execute();
 
@@ -122,7 +121,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    }
 	}
 
-	public void atualizarCpfUsuario1(Usuario usuario, String novoCpf) {
+	public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
 	    
 	    Connection conexao = null;
 	    PreparedStatement update = null;
@@ -130,115 +129,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET cpf = ? WHERE id = ?");
-	        
-	        update.setString(1, novoCpf);
-	        update.setLong(2, usuario.getId());
-
-	        update.execute();
-
-	    } catch (SQLException erro) {
-	        erro.printStackTrace();
-	    }
-
-	    finally {
-
-	        try {
-
-	            if (update != null)
-	                update.close();
-
-	            if (conexao != null)
-	                conexao.close();
-
-	        } catch (SQLException erro) {
-
-	            erro.printStackTrace();
-	        }
-	    }
-	}
-
-	public void atualizarCpfUsuario(Usuario usuario, String novoCpf) {
-	    
-	    Connection conexao = null;
-	    PreparedStatement update = null;
-
-	    try {
-
-	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET cpf = ? WHERE id = ?");
-	        
-	        update.setString(1, novoCpf);
-	        update.setLong(2, usuario.getId());
-
-	        update.execute();
-
-	    } catch (SQLException erro) {
-	        erro.printStackTrace();
-	    }
-
-	    finally {
-
-	        try {
-
-	            if (update != null)
-	                update.close();
-
-	            if (conexao != null)
-	                conexao.close();
-
-	        } catch (SQLException erro) {
-
-	            erro.printStackTrace();
-	        }
-	    }
-	}
-
-	public void atualizarGeneroUsuario1(Usuario usuario, String novoGenero) {
-	    
-	    Connection conexao = null;
-	    PreparedStatement update = null;
-
-	    try {
-
-	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET genero = ? WHERE id = ?");
-	        
-	        update.setString(1, novoGenero);
-	        update.setLong(2, usuario.getId());
-
-	        update.execute();
-
-	    } catch (SQLException erro) {
-	        erro.printStackTrace();
-	    }
-
-	    finally {
-
-	        try {
-
-	            if (update != null)
-	                update.close();
-
-	            if (conexao != null)
-	                conexao.close();
-
-	        } catch (SQLException erro) {
-
-	            erro.printStackTrace();
-	        }
-	    }
-	}
-
-	public void atualizarEnderecoUsuario1(Usuario usuario, String novoEndereco) {
-	    
-	    Connection conexao = null;
-	    PreparedStatement update = null;
-
-	    try {
-
-	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET endereco = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id = ?");
 	        
 	        update.setString(1, novoEndereco);
 	        update.setLong(2, usuario.getId());
@@ -266,7 +157,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    }
 	}
 
-	public List<Usuario> recuperarUsuarios1() {
+	public List<Usuario> recuperarUsuarios() {
 
 	    Connection conexao = null;
 	    Statement consulta = null;
@@ -284,13 +175,60 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
 	            long id = resultado.getLong("id");
 	            String nome = resultado.getString("nome");
-	            String cpf = resultado.getString("cpf");
-	            // como fazer este? enum genero = resultado.getEnum("genero");
-	            // nao sei se esta correto Endereco endereco = resultado.getClass("endereco");
-	            String genero = resultado.getString("genero");
-	            String endereco = resultado.getString("endereco");
+	            Endereco endereco = EnderecoDAOImp.recuperarEnderecoresultado.getlong("id_endereco"); 
+	            Contato contato = ContatoDAOImp.recuperarContato.resultado.getLong("id_contato");
+	            usuarios.add(new Usuario(id, nome, endereco, contato));
+	            
 
+	         
+	        }
 
+	    } catch (SQLException erro) {
+	        erro.printStackTrace();
+	    }
+
+	    finally {
+
+	        try {
+
+	            if (resultado != null)
+	                resultado.close();
+
+	            if (consulta != null)
+	                consulta.close();
+
+	            if (conexao != null)
+	                conexao.close();
+
+	        } catch (SQLException erro) {
+
+	            erro.printStackTrace();
+	        }
+	    }
+
+	    return usuarios;
+	}
+	public List<Usuario> recuperarIdUsuarios() {
+
+	    Connection conexao = null;
+	    Statement consulta = null;
+	    ResultSet resultado = null;
+
+	    List<Usuario> usuarios = new ArrayList<Usuario>();
+
+	    try {
+
+	        conexao = conectarBanco();
+	        consulta = conexao.createStatement();
+	        resultado = consulta.executeQuery("SELECT * FROM usuario");
+
+	        while (resultado.next()) {
+
+	            long id = resultado.getLong("id");
+	            String nome = resultado.getString("nome");
+	            Endereco endereco = EnderecoDAOImp.recuperarEnderecoresultado.getlong("id_endereco"); 
+	            Contato contato = ContatoDAOImp.recuperarContato.resultado.getLong("id_contato");
+	            usuarios.add(new Usuario(id, nome, endereco, contato));
 	            
 
 	         
@@ -328,32 +266,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 private Connection conectarBanco() throws SQLException {
 	return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 }
-
-public void atualizarGeneroUsuario(Usuario usuario, String novoGenero) {
-	// TODO Auto-generated method stub
-	
-}
-
-public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
-	// TODO Auto-generated method stub
-	
-}
-
-public List<Usuario> recuperarUsuarios() {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-public List<Usuario> recuperarDepositosRealizados() {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-public List<Usuario> recuperarDepositosRealizadosPeriodo() {
-	// TODO Auto-generated method stub
-	return null;
-}
-
 
 }
 	

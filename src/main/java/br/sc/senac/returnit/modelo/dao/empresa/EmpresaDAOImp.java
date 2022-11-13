@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
+import br.sc.senac.returnit.modelo.entidade.usuario.*;
 
 public class EmpresaDAOImp implements EmpresaDAO {
 
@@ -19,12 +21,11 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			insert = conexao.prepareStatement("INSERT INTO empresa (, cpf_cliente, idade_cliente, divida_cliente) VALUES (?,?,?,?)");
+			insert = conexao.prepareStatement("INSERT INTO empresa (cnpj_empresa, id_usuario ) VALUES (?,?)");
 
-			insert.setString(1, empresa.);
-			insert.setString(2, empresa.);
-			insert.setInt(3, empresa.);
-			insert.setDouble(4, empresa.);
+			insert.setString(1, empresa.getCnpj());
+			insert.setLong(3, empresa.getUsuario());
+			
 
 			insert.execute();
 
@@ -49,7 +50,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		}
 	}
 
-	public void deletarEmpresa(Cliente cliente) {
+	public void deletarEmpresa(Empresa empresa) {
 		
 		Connection conexao = null;
 		PreparedStatement delete = null;
@@ -57,9 +58,9 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			delete = conexao.prepareStatement("DELETE FROM cliente WHERE id_cliente = ?");
+			delete = conexao.prepareStatement("DELETE FROM empresa WHERE cnpj_empresa = ?");
 
-			delete.setInt(1, cliente.getId());
+			delete.setLong(1, empresa.getId());
 
 			delete.execute();
 
@@ -84,7 +85,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		}
 	}
 
-	public void atualizarNomeEmpresa(Cliente cliente, String novoNome) {
+	public void atualizarCnpjEmpresa(Empresa empresa, String novoCnpj) {
 		
 		Connection conexao = null;
 		PreparedStatement update = null;
@@ -92,10 +93,10 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE cliente SET nome_cliente = ? WHERE id_cliente = ?");
+			update = conexao.prepareStatement("UPDATE empresa SET cnpj_empresa = ? WHERE cnpj_empresa = ?");
 			
-			update.setString(1, novoNome);
-			update.setInt(2, cliente.getId());
+			update.setString(1, novoCnpj);
+			update.setString(2, empresa.getCnpj());
 
 			update.execute();
 
@@ -120,7 +121,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		}
 	}
 
-	public void atualizarCpfEmpresa(Cliente cliente, String novoCpf) {
+	public void atualizarIdUsuario(Empresa empresa, Long novoIdUsuario) {
 		
 		Connection conexao = null;
 		PreparedStatement update = null;
@@ -128,10 +129,10 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE cliente SET cpf_cliente = ? WHERE id_cliente = ?");
+			update = conexao.prepareStatement("UPDATE empresa SET id_usuario = ? WHERE cnpj_empresa = ?");
 			
-			update.setString(1, novoCpf);
-			update.setInt(2, cliente.getId());
+			update.setLong(1, novoIdUsuario);
+			update.setString(2, empresa.getCnpj());
 
 			update.execute();
 
@@ -156,20 +157,29 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		}
 	}
 
-	public void atualizarIdadeEmpresa(Cliente cliente, int novaIdade) {
-		
+	public List<Empresa> recuperarEmpresas() {
+
 		Connection conexao = null;
-		PreparedStatement update = null;
+		Statement consulta = null;
+		ResultSet resultado = null;
+
+		List<Empresa> empresas = new ArrayList<Empresa>();
 
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE cliente SET idade_cliente = ? WHERE id_cliente = ?");
+			consulta = conexao.createStatement();
+			resultado = consulta.executeQuery("SELECT * FROM empresa");
+
+			while (resultado.next()) {
+
 			
-			update.setInt(1, novaIdade);
-			update.setInt(2, cliente.getId());
+				
+				String cnpj = resultado.getString("cnpj_empresa");
+				Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
 
-			update.execute();
+				empresas.add(new Empresa(cnpj, usuario));
+			}
 
 		} catch (SQLException erro) {
 			erro.printStackTrace();
@@ -179,8 +189,11 @@ public class EmpresaDAOImp implements EmpresaDAO {
 
 			try {
 
-				if (update != null)
-					update.close();
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
 
 				if (conexao != null)
 					conexao.close();
@@ -190,68 +203,220 @@ public class EmpresaDAOImp implements EmpresaDAO {
 				erro.printStackTrace();
 			}
 		}
+
+		return empresas;
 	}
 
-	public void atualizarDividaEmpresa(Cliente cliente, double novaDivida) {
-		
+	public List<Empresa> recuperarEmpresasOrdenadosCnpjAscendente() {
+
 		Connection conexao = null;
-		PreparedStatement update = null;
+		Statement consulta = null;
+		ResultSet resultado = null;
+
+		List<Empresa> empresas = new ArrayList<Empresa>();
 
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE cliente SET divida_cliente = ? WHERE id_cliente = ?");
+			consulta = conexao.createStatement();
+			resultado = consulta.executeQuery("SELECT * FROM empresas ORDER BY cnpj_empresa ASC");
+
+			while (resultado.next()) {
+
+				String cnpj = resultado.getString("cnpj_empresa");
+				Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+
+				empresas.add(new Empresa(cnpj, usuario));
+			}
+
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return empresas;
+	}
+
+	public List<Empresa> recuperarEmpresasOrdenadosNomeDescendente() {
+		
+		Connection conexao = null;
+		Statement consulta = null;
+		ResultSet resultado = null;
+
+		List<Empresa> empresas = new ArrayList<Empresa>();
+
+		try {
+
+			conexao = conectarBanco();
+			consulta = conexao.createStatement();
+			resultado = consulta.executeQuery("SELECT * FROM empresa ORDER BY cnpj_empresa DESC");
+
+			while (resultado.next()) {
+
+				String cnpj = resultado.getString("cnpj_empresa");
+				Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+
+				empresas.add(new Empresa(cnpj, usuario));
+			}
+
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return empresas;
+	}
+
+	public List<Empresa> recuperarEmpresasOrdenadosIdUsuarioAscendente() {
+		
+		Connection conexao = null;
+		Statement consulta = null;
+		ResultSet resultado = null;
+
+		List<Empresa> empresas = new ArrayList<Empresa>();
+
+		try {
+
+			conexao = conectarBanco();
+			consulta = conexao.createStatement();
+			resultado = consulta.executeQuery("SELECT * FROM empresa ORDER BY id_usuario ASC");
+
+			while (resultado.next()) {
+
+				String cnpj = resultado.getString("cnpj_empresa");
+				Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+
+				empresas.add(new Empresa(cnpj, usuario));
+			}
+
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return empresas;
+	}
+
+	public List<Empresa> recuperarEmpresasOrdenadosIdUsuarioDescendente() {
+		
+		Connection conexao = null;
+		Statement consulta = null;
+		ResultSet resultado = null;
+
+		List<Empresa> empresas = new ArrayList<Empresa>();
+
+		try {
+
+			conexao = conectarBanco();
+			consulta = conexao.createStatement();
+			resultado = consulta.executeQuery("SELECT * FROM empresa ORDER BY id_usuario ASC");
+
+			while (resultado.next()) {
+
+				String cnpj = resultado.getString("cnpj_empresa");
+				Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+
+				empresas.add(new Empresa(cnpj, usuario));
+			}
+
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return empresas;
+	}
+
+	public Empresa recuperarEmpresaCnpj(String cnpjEmpresa) {
+		
+		Connection conexao = null;
+		PreparedStatement consulta = null;
+		ResultSet resultado = null;
+		Empresa empresa = null;
+
+		try {
+
+			conexao = conectarBanco();
+			consulta = conexao.prepareStatement("SELECT * FROM empresa where cnpj_empresa == ?");
+			consulta.setString(1, cnpjEmpresa);
+			resultado = consulta.executeQuery();
+
+			String cnpj = resultado.getString("cnpj_empresa");
+			Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+			empresa = new Empresa(cnpj, usuario);
 			
-			update.setDouble(1, novaDivida);
-			update.setInt(2, cliente.getId());
-
-			update.execute();
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (update != null)
-					update.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-	}
-
-	public List<Cliente> recuperarEmpresa() {
-
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
 
 		} catch (SQLException erro) {
 			erro.printStackTrace();
@@ -276,84 +441,26 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			}
 		}
 
-		return clientes;
+		return empresa;
 	}
 
-	public List<Cliente> recuperarEmpresasOrdenadosNomeAscendente() {
-
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY nome_cliente ASC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosNomeDescendente() {
+	public Empresa recuperarEmpresaIdUsuario(long idUsuario) {
 		
 		Connection conexao = null;
-		Statement consulta = null;
+		PreparedStatement consulta = null;
 		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
+		Empresa empresa = null;
 
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY nome_cliente DESC");
+			consulta = conexao.prepareStatement("SELECT * FROM empresa where id_usuario == ?");
+			consulta.setLong(1, idUsuario);
+			resultado = consulta.executeQuery();
 
-			while (resultado.next()) {
-
-				int idCliente = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(idCliente, nome, cpf, idade, divida));
-			}
+			String cnpj = resultado.getString("cnpj_empresa");
+			Usuario usuario = UsuarioDAOImpl.recuperarUsuarioId(resultado.getLong("id_usuario"));
+			empresa = new Empresa(cnpj, usuario);
 
 		} catch (SQLException erro) {
 			erro.printStackTrace();
@@ -378,314 +485,9 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			}
 		}
 
-		return clientes;
+		return empresa;
 	}
 
-	public List<Cliente> recuperarEmpresasOrdenadosCpfAscendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY cpf_cliente ASC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosCpfDescendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY cpf_cliente ASC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosIdadeAscendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY idade_cliente ASC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosIdadeDescendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY idade_cliente DESC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosDividaAscendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY divida_cliente ASC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
-
-	public List<Cliente> recuperarEmpresasOrdenadosDividaDescendente() {
-		
-		Connection conexao = null;
-		Statement consulta = null;
-		ResultSet resultado = null;
-
-		List<Cliente> clientes = new ArrayList<Cliente>();
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.createStatement();
-			resultado = consulta.executeQuery("SELECT * FROM cliente ORDER BY divida_cliente DESC");
-
-			while (resultado.next()) {
-
-				int id = resultado.getInt("id_cliente");
-				String nome = resultado.getString("nome_cliente");
-				String cpf = resultado.getString("cpf_cliente");
-				int idade = resultado.getInt("idade_cliente");
-				double divida = resultado.getDouble("divida_cliente");
-
-				clientes.add(new Cliente(id, nome, cpf, idade, divida));
-			}
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return clientes;
-	}
 
 	private Connection conectarBanco() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://localhost/cadastro?user=admin&password=password");

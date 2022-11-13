@@ -1,19 +1,17 @@
+package br.sc.senac.returnit.modelo.entidade.empresa;
+import br.sc.senac.returnit.modelo.entidade.usuario.*;
+
 
 public class Empresa {
 
-	public Empresa(long id, String cnpj, String marca, Endereco endereco, Retornavel retornavel) {
+	public Empresa(String cnpj, Usuario usuario) {
 		super();
-		this.id = id;
 		this.cnpj = cnpj;
-		this.marca = marca;
-		this.endereco = endereco;
-		this.retornavel = retornavel;
+		this.usuario = usuario;
 	}
 	private long id;
 	private String cnpj;
-	private String marca;
-	private Endereco endereco;
-	private Retornavel retornavel;
+	private Usuario usuario;
 	public long getId() {
 		return id;
 	}
@@ -26,22 +24,11 @@ public class Empresa {
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
-	public String getMarca() {
-		return marca;
+	public long getUsuario() {
+		
+		return usuario.getId();
 	}
-	public void setMarca(String marca) {
-		this.marca = marca;
-	}
-	public Endereco getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-	public Retornavel getRetornavel() {
-		return retornavel;
-	}
-	public void setRetornavel(Retornavel retornavel) {
-		this.retornavel = retornavel;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 }

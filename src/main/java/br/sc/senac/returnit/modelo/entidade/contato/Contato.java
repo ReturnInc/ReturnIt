@@ -1,24 +1,32 @@
-
+package br.sc.senac.returnit.modelo.entidade.contato;
 public class Contato {
 
-	public Contato(String whatsapp, String email) {
+	public Contato(long idContato,String telefoneContato , String emailContato) {
 		super();
-		this.whatsapp = whatsapp;
-		this.email = email;
+		this.idContato = idContato;
+		this.telefoneContato = telefoneContato;
+		this.emailContato = emailContato;
 	}
-	private String whatsapp;
-	private String email;
-	public String getWhatsapp() {
-		return whatsapp;
+	private long idContato;
+	private String telefoneContato;
+	private String emailContato;
+	public String getTelefoneContato() {
+		return telefoneContato;
 	}
-	public void setWhatsapp(String whatsapp) {
-		this.whatsapp = whatsapp;
+	public void setTelefoneContato(String novoTelefoneContato) {
+		this.telefoneContato = novoTelefoneContato;
 	}
 	public String getEmail() {
-		return email;
+		return emailContato;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmail(String novoEmailContato) {
+		this.emailContato = novoEmailContato;
+	}
+	public long getIdContato() {
+		return idContato;
+	}
+	public void setIdContato(long novoIdContato) {
+		this.idContato = novoIdContato;
 	}
 	
 }

@@ -7,32 +7,23 @@ public interface EmpresaDAO {
 
 		void deletarEmpresa(Empresa Empresa);
 
-		void atualizarNomeEmpresa(Empresa Empresa, String novoNome);
+		void atualizarCnpjEmpresa(Empresa Empresa, String novoCnpj);
 
-		void atualizarCpfEmpresa(Empresa Empresa, String novoCpf);
+		void atualizarIdUsuario(Empresa Empresa, long novoIdUsuario);
 
-		void atualizarIdadeEmpresa(Empresa Empresa, int novaIdade);
-
-		void atualizarDividaEmpresa(Empresa Empresa, double novaDivida);
 
 		List<Empresa> recuperarEmpresas();
 
-		List<Empresa> recuperarEmpresasOrdenadosNomeAscendente();
+		List<Empresa> recuperarEmpresasOrdenadosCnpjAscendente();
 
-		List<Empresa> recuperarEmpresasOrdenadosNomeDescendente();
+		List<Empresa> recuperarEmpresasOrdenadosCnpjDescendente();
 
-		List<Empresa> recuperarEmpresasOrdenadosCpfAscendente();
+		List<Empresa> recuperarEmpresasOrdenadosIdUsuarioAscendente();
 
-		List<Empresa> recuperarEmpresasOrdenadosCpfDescendente();
-		
-		List<Empresa> recuperarEmpresasOrdenadosIdadeAscendente();
+		List<Empresa> recuperarEmpresasOrdenadosIdUsuarioDescendente();
 
-		List<Empresa> recuperarEmpresasOrdenadosIdadeDescendente();
-		
-		List<Empresa> recuperarEmpresasOrdenadosDividaAscendente();
-
-		List<Empresa> recuperarEmpresasOrdenadosDividaDescendente();
-		
 		Empresa recuperarEmpresaPorCnpj(String cnpjEmpresa);
+		
+		Empresa recuperarEmpresasPorIdUsuario(long IdUsuario);
 }
 

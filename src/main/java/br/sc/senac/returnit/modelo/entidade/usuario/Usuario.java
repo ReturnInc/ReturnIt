@@ -1,6 +1,6 @@
-package br.sc.senac.returnit.entidade.usuario;
-import Contato;
-import Endereco;
+package br.sc.senac.returnit.modelo.entidade.usuario;
+import br.sc.senac.returnit.modelo.entidade.contato.*;
+import br.sc.senac.returnit.modelo.entidade.endereco.*;
 
 public abstract class Usuario {
 
@@ -33,14 +33,14 @@ public abstract class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Endereco getEndereco() {
-		return endereco;
+	public long getEndereco() {
+		return endereco.getIdEndereco();
 	}
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
+	public void setEndereco(Endereco novoEndereco) {
+		this.endereco = novoEndereco;
 	}
-	public Contato getContato() {
-		return contato;
+	public long getContato() {
+		return contato.getIdContato();
 	}
 	public void setContato(Contato contato) {
 		this.contato = contato;

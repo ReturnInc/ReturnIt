@@ -5,7 +5,7 @@ import br.sc.senac.returnit.modelo.entidade.endereco.*;
 public class Usuario {
 
 	private long idUsuario;
-	private String nome;
+	private String nomeUsuario;
 	private Endereco endereco;
 	private Contato contato;
 	private String senha;
@@ -14,7 +14,7 @@ public class Usuario {
 	
 	public Usuario(long idUsuario, String nome, Endereco endereco, Contato contato, String senha) {
 		this.idUsuario = idUsuario;
-		this.nome = nome;
+		this.nomeUsuario = nome;
 		this.endereco = endereco;
 		this.contato = contato;
 		this.senha = senha;
@@ -27,10 +27,10 @@ public class Usuario {
 		this.idUsuario = id;
 	}
 	public String getNome() {
-		return nome;
+		return nomeUsuario;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
 	}
 	public Endereco getEndereco() {
 		return endereco;

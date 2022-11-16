@@ -4,21 +4,19 @@ import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 
 public class Retornavel {
 
-	public Retornavel(String marca, String modelo, String cnpjEmpresa, String material, int ponto, int preco) {
-		super();
+	public Retornavel(long idRetornavel, String material, String marca, String modelo, String cnpjEmpresa) {
+		this.idRetornavel = idRetornavel;
+		this.material = material;
 		this.marca = marca;
 		this.modelo = modelo;
 		this.cnpjEmpresa = cnpjEmpresa;
-		this.material = material;
-		this.ponto = ponto;
-		this.preco = preco;
+		
 	}
+	private long idRetornavel;
+	private String material;
 	private String marca;
 	private String modelo;
 	private String cnpjEmpresa;
-	private String material;
-	private int ponto;
-	private int preco;
 	public String getMarca() {
 		return marca;
 	}
@@ -31,12 +29,16 @@ public class Retornavel {
 	public void setModelo(String modelo) {
 		this.modelo = modelo;
 	}
+	public String getCnpjEmpresa() {
+		return cnpjEmpresa;
+	}
 	public Empresa getEmpresa() {
-		Empresa empresa = EmpresaDAOImp.recuperarEmpresaPorCnpj(cnpjEmpresa);
+		EmpresaDAOImp empresaDAO = new EmpresaDAOImp();
+		Empresa empresa = empresaDAO.recuperarEmpresaCnpj(cnpjEmpresa);
 		return empresa;
 	}
 	public void setEmpresa(Empresa empresa) {
-		this.cnpjEmpresa = Empresa.getCnpj();
+		this.cnpjEmpresa = empresa.getCnpj();
 	}
 	public String getMaterial() {
 		return material;
@@ -44,17 +46,10 @@ public class Retornavel {
 	public void setMaterial(String material) {
 		this.material = material;
 	}
-	public int getPonto() {
-		return ponto;
+	public long getIdRetornavel() {
+		return idRetornavel;
 	}
-	public void setPonto(int ponto) {
-		this.ponto = ponto;
-	}
-	public int getPreco() {
-		return preco;
-	}
-	public void setPreco(int preco) {
-		this.preco = preco;
-	}
-	
+	public void setIdRetornavel(int ponto) {
+		this.idRetornavel = ponto;
+	}	
 }

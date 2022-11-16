@@ -1,43 +1,48 @@
-import java.time.LocalDateTime;
+package br.sc.senac.returnit.modelo.entidade.deposito; 
 
-import br.sc.senac.returnit.entidade.usuario.Usuario;
+import java.util.Date;
+
 
 public class Deposito {
+	
+	private long idDeposito;
+	private Date dataDeposito;
+	private int quantidadeDeposito;
+	private long retornavelDeposito;
+	
 
-	public Deposito(Colaborador colaborador, Usuario usuario, LocalDateTime data, Retornavel retornavel) {
+	public Deposito(long idDeposito, Date dataDeposito, int quantidadeDeposito, long retornavelDeposito) {
 		super();
-		this.colaborador = colaborador;
-		this.usuario = usuario;
-		this.data = data;
-		this.retornavel = retornavel;
+		this.idDeposito = idDeposito;
+		this.dataDeposito = dataDeposito;
+		this.quantidadeDeposito = quantidadeDeposito;
+		this.retornavelDeposito = retornavelDeposito;
 	}
-	private Colaborador colaborador;
-	private Usuario usuario;
-	private LocalDateTime data;
-	private Retornavel retornavel;
-	public Colaborador getColaborador() {
-		return colaborador;
+	
+	public long getIdDeposito() {
+		return idDeposito;
 	}
-	public void setColaborador(Colaborador colaborador) {
-		this.colaborador = colaborador;
+	public void setIdDeposito(long novoIdDeposito) {
+		this.idDeposito = novoIdDeposito;
 	}
-	public Usuario getUsuario() {
-		return usuario;
+	public Date getDataDeposito() {
+		return dataDeposito;
 	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setDataDeposito(Date novaDataDeposito) {
+		this.dataDeposito = novaDataDeposito;
 	}
-	public LocalDateTime getData() {
-		return data;
+	public int getQuantidadeDeposito() {
+		return quantidadeDeposito;
 	}
-	public void setData(LocalDateTime data) {
-		this.data = data;
+	public void setQuantidadeDeposito(int novaQuantidadeDeposito) {
+		this.quantidadeDeposito = novaQuantidadeDeposito;
 	}
-	public Retornavel getRetornavel() {
-		return retornavel;
+	public long getRetornavelDeposito() {
+		return retornavelDeposito;
 	}
+	public void setRetornavelDeposito(long novoRetornavelDeposito) {
+		this.retornavelDeposito = novoRetornavelDeposito;
+	}
+	
 
-	public void setRetornavel(Retornavel retornavel) {
-		this.retornavel = retornavel;
-	}
 }

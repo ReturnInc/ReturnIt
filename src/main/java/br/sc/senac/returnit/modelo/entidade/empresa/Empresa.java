@@ -24,9 +24,9 @@ public class Empresa {
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
-	public long getUsuario() {
+	public Usuario getUsuario() {
 		
-		return usuario.getId();
+		return usuario;
 	}
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;

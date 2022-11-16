@@ -16,7 +16,7 @@ import br.sc.senac.returnit.modelo.entidade.contato.*;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
-	public void inserirUsuario(Usuario usuario) {
+public void inserirUsuario(Usuario usuario) {
 
 	    Connection conexao = null;
 	    PreparedStatement insert = null;
@@ -56,7 +56,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    }
 	}
 
-	public void deletarUsuario(Usuario usuario) {
+public void deletarUsuario(Usuario usuario) {
 	    
 	    Connection conexao = null;
 	    PreparedStatement delete = null;
@@ -95,7 +95,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	    }
 	}
 
-	public void atualizarNomeUsuario(Usuario usuario, String novoNome) {
+public void atualizarNomeUsuario(Usuario usuario, String novoNome) {
 	    
 	    Connection conexao = null;
 	    PreparedStatement update = null;
@@ -130,17 +130,16 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	        }
 	    }
 	}
-
-public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
-	    Connection conexao = null;
+public void atualizarContatoUsuario(Usuario usuario, long novoIdContato) {
+	   	Connection conexao = null;
 	    PreparedStatement update = null;
 
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET nome = ? WHERE id = ?");
 	        
-	        update.setString(1, novoEndereco);
+	        update.setLong(1, novoIdContato);
 	        update.setLong(2, usuario.getId());
 
 	        update.execute();
@@ -165,7 +164,43 @@ public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
 	        }
 	    }
 	}
-  public void atualizarSenhaUsuario(Usuario usuario, String novoEndereco) {
+	
+
+public void atualizarEnderecoUsuario(Usuario usuario, long novoIdEndereco) {
+	    Connection conexao = null;
+	    PreparedStatement update = null;
+
+	    try {
+
+	        conexao = conectarBanco();
+	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id = ?");
+	        
+	        update.setLong(1, novoIdEndereco);
+	        update.setLong(2, usuario.getId());
+
+	        update.execute();
+
+	    } catch (SQLException erro) {
+	        erro.printStackTrace();
+	    }
+
+	    finally {
+
+	        try {
+
+	            if (update != null)
+	                update.close();
+
+	            if (conexao != null)
+	                conexao.close();
+
+	        } catch (SQLException erro) {
+
+	            erro.printStackTrace();
+	        }
+	    }
+	}
+ public void atualizarSenhaUsuario(Usuario usuario, String novoEndereco) {
 	    
 	    Connection conexao = null;
 	    PreparedStatement update = null;
@@ -201,7 +236,7 @@ public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
 	    }
 	}
 
-	public List<Usuario> recuperarUsuarios() {
+public List<Usuario> recuperarUsuarios() {
 
 	    Connection conexao = null;
 	    Statement consulta = null;
@@ -256,21 +291,77 @@ public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
 
 	    return usuarios;
 	}
-	public Usuario recuperarIdUsuario(long IdUsuario) {
-
-	    Connection conexao = null;
-	    Statement consulta = null;
+public Usuario recuperarNomeUsuarios(String nomeUsuario) {
+		
+		Connection conexao = null;
+		PreparedStatement consulta = null;
 	    ResultSet resultado = null;
 	    ContatoDAOImp contatoDAO = new ContatoDAOImp();
         EnderecoDAOImp enderecoDAO = new EnderecoDAOImp();
-	    Usuario usuarios = null;
+	    Usuario usuario = null;
 
 	    try {
 
 	        conexao = conectarBanco();
-	        consulta = conexao.createStatement();
-	        resultado = consulta.executeQuery("SELECT * FROM usuario");
-	        Usuario usuario = null;
+	        consulta = conexao.prepareStatement("SELECT * FROM usuario where nome_usuario == ? ");
+	        consulta.setString(1, nomeUsuario);
+	        resultado = consulta.executeQuery();
+	   
+
+	            long id = resultado.getLong("id_usuario");
+	            String nome = resultado.getString("nome_usuario");
+	            Endereco endereco = enderecoDAO.recuperarEnderecoId(resultado.getLong("id_endereco")); 
+	            Contato contato = contatoDAO.recuperarContatoId(resultado.getLong("id_contato"));
+	            String senha = resultado.getString("senha_usuario");
+	            usuario = new Usuario(id, nome, endereco, contato, senha);
+	            
+
+	         
+	        
+
+	    } catch (SQLException erro) {
+	        erro.printStackTrace();
+	    }
+
+	    finally {
+
+	        try {
+
+	            if (resultado != null)
+	                resultado.close();
+
+	            if (consulta != null)
+	                consulta.close();
+
+	            if (conexao != null)
+	                conexao.close();
+
+	        } catch (SQLException erro) {
+
+	            erro.printStackTrace();
+	        }
+	    }
+
+	 return usuario;
+	}
+		
+	
+public Usuario recuperarIdUsuario(long idUsuario) {
+
+	    Connection conexao = null;
+	    PreparedStatement consulta = null;
+	    ResultSet resultado = null;
+	    ContatoDAOImp contatoDAO = new ContatoDAOImp();
+        EnderecoDAOImp enderecoDAO = new EnderecoDAOImp();
+	    Usuario usuario = null;
+
+	    try {
+
+	        conexao = conectarBanco();
+	        consulta = conexao.prepareStatement("SELECT * FROM usuario where id_usuario == ? ");
+	        consulta.setLong(1, idUsuario);
+	        resultado = consulta.executeQuery();
+	   
 
 	            long id = resultado.getLong("id_usuario");
 	            String nome = resultado.getString("nome_usuario");
@@ -315,6 +406,5 @@ public void atualizarEnderecoUsuario(Usuario usuario, String novoEndereco) {
 private Connection conectarBanco() throws SQLException {
 	return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 }
-
 }
 	

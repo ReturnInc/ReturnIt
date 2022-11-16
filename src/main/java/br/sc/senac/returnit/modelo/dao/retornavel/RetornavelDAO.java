@@ -7,29 +7,17 @@ public interface RetornavelDAO {
 
 		void deletarRetornavel(Retornavel retornavel);
 
-		void atualizar(Retornavel retornavel, String novoNome);
+		void atualizarMaterial(Retornavel retornavel, String novoMaterial);
 
-		void atualizar(Retornavel retornavel, String novoCpf);
+		void atualizarModeloRetornavel(Retornavel retornavel, String novoModeloRetornavel);
 
-		void atualizar(Retornavel retornavel, int novaIdade);
+		void atualizarMarcaRetornavel(Retornavel retornavel, String novaMarcaRetornavel);
 
-		void atualizar(Retornavel retornavel, double novaDivida);
+		void atualizarCnpjEmpresa(Retornavel retornavel, String novoCnpjEmpresa);
 
-		List<Retornavel> recuperarClientes();
+		List<Retornavel> recuperarRetornaveis();
 
-		List<Retornavel> recuperarClientesOrdenadosNomeAscendente();
-
-		List<Retornavel> recuperarClientesOrdenadosNomeDescendente();
-
-		List<Retornavel> recuperarClientesOrdenadosCpfAscendente();
-
-		List<Retornavel> recuperarClientesOrdenadosCpfDescendente();
+		Retornavel recuperarRetornavelId(long idRetornavel);
 		
-		List<Retornavel> recuperarClientesOrdenadosIdadeAscendente();
-
-		List<Retornavel> recuperarClientesOrdenadosIdadeDescendente();
-		
-		List<Retornavel> recuperarClientesOrdenadosDividaAscendente();
-
-		List<Retornavel> recuperarClientesOrdenadosDividaDescendente();
+		List<Retornavel> recuperarRetornaveisCnpj(String cnpjEmpresa);
 	}

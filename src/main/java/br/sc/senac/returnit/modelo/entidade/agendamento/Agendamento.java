@@ -1,69 +1,60 @@
-package br.sc.senac.returnit.entidade.agendamento;
+package br.sc.senac.returnit.modelo.entidade.agendamento;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import Colaborador;
-import Empresa;
-import Endereco;
-import Retornavel;
+
 
 public class Agendamento {
-	private long id;
-	private LocalDateTime data;
-	private Endereco local;
-	private Colaborador colaborador;
-	private Empresa empresa;
-	private List<Retornavel> retornaveis = new ArrayList<Retornavel>();
-
-	public LocalDateTime getData() {
-		return data;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Agendamento(long id, LocalDateTime data, Endereco local, Colaborador colaborador, Empresa empresa) {
+	
+	private long idAgendamento;
+	private boolean realizadoAgendamento;
+	private Date dataAgendamento;
+	private long idEmpresa;
+	private long idCooperado;
+	
+	
+	public Agendamento(long idAgendamento, boolean realizadoAgendamento, Date dataAgendamento, long idEmpresa, long idCooperado) {
 		super();
-		this.id = id;
-		this.data = data;
-		this.local = local;
-		this.colaborador = colaborador;
-		this.empresa = empresa;
+		this.idAgendamento = idAgendamento;
+		this.realizadoAgendamento = realizadoAgendamento;
+		this.dataAgendamento = dataAgendamento;
+		this.idEmpresa = idEmpresa;
+		this.idCooperado = idCooperado;
+	}
+	
+	public long getIdAgendamento() {
+		return idAgendamento;
 	}
 
-	public void setData(LocalDateTime data) {
-		this.data = data;
+	public void setIdAgendamento(long id) {
+		this.idAgendamento = id;
+	}
+	public boolean getRealizadoAgendamento() {
+		return realizadoAgendamento;
 	}
 
-	public Endereco getLocal() {
-		return local;
+	public void setRealizadoAgendamento(boolean realizadoAgendamento) {
+		this.realizadoAgendamento = realizadoAgendamento;
+	}
+	public Date getDataAgendamento() {
+		return dataAgendamento;
+	}
+	public void setDataAgendamento(Date novaDataAgendamento) {
+		this.dataAgendamento = novaDataAgendamento;
+	}
+	public long getIdEmpresa() {
+		return idEmpresa;
 	}
 
-	public void setLocal(Endereco local) {
-		this.local = local;
+	public void setIdEmpresa(long novoIdEmpresa) {
+		this.idEmpresa = novoIdEmpresa;
 	}
 
-	public Colaborador getColaborador() {
-		return colaborador;
+	public long getIdCooperado() {
+		return idCooperado;
 	}
 
-	public void setColaborador(Colaborador colaborador) {
-		this.colaborador = colaborador;
+	public void setIdCooperado(long novoIdCooperado) {
+		this.idCooperado = novoIdCooperado;
 	}
-
-	public Empresa getEmpresa() {
-		return empresa;
-	}
-
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
-
 }

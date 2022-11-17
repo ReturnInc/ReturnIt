@@ -338,7 +338,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM retornavel where cnpjEmpresa = ? ");
+			consulta = conexao.prepareStatement("SELECT * FROM retornavel where empresa_cnpj = ? ");
 			consulta.setString(1, cnpjEmpresa);
 			resultado = consulta.executeQuery();
 			

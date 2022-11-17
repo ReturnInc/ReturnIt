@@ -16,7 +16,7 @@ import br.sc.senac.returnit.modelo.entidade.contato.*;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
-public void inserirUsuario(Usuario usuario) {
+     public void inserirUsuario(Usuario usuario) {
 
 	    Connection conexao = null;
 	    PreparedStatement insert = null;
@@ -24,14 +24,16 @@ public void inserirUsuario(Usuario usuario) {
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO usuario (nome, senha, id_endereco, id_contato) VALUES (?,?,?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO usuario (nome_usuario, senha_usuario, id_endereco, id_contato) VALUES (?,?,?,?)");
 	        
 	        insert.setString(1, usuario.getNome());
 	        insert.setString(2,usuario.getSenha());
-	        Contato contato = usuario.getContato();
-	        insert.setLong(3, contato.getIdContato());
+	        
 	        Endereco endereco = usuario.getEndereco();
-	        insert.setLong(4, endereco.getIdEndereco());
+	        insert.setLong(3, endereco.getIdEndereco());
+	        
+	        Contato contato = usuario.getContato();
+	        insert.setLong(4, contato.getIdContato());
 
 	        insert.execute();
 
@@ -66,7 +68,7 @@ public void deletarUsuario(Usuario usuario) {
 	    try {
 
 	        conexao = conectarBanco();
-	        delete = conexao.prepareStatement("DELETE FROM usuario WHERE id = ?");
+	        delete = conexao.prepareStatement("DELETE FROM usuario WHERE id_usuario = ?");
 
 	        delete.setLong(1, usuario.getId());
 
@@ -103,7 +105,7 @@ public void atualizarNomeUsuario(Usuario usuario, String novoNome) {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET nome = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET nome_usuario = ? WHERE id_usuario = ?");
 	        
 	        update.setString(1, novoNome);
 	        update.setLong(2, usuario.getId());
@@ -137,7 +139,7 @@ public void atualizarContatoUsuario(Usuario usuario, long novoIdContato) {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET nome = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET id_contato = ? WHERE id_usuario = ?");
 	        
 	        update.setLong(1, novoIdContato);
 	        update.setLong(2, usuario.getId());
@@ -173,7 +175,7 @@ public void atualizarEnderecoUsuario(Usuario usuario, long novoIdEndereco) {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id_usuario = ?");
 	        
 	        update.setLong(1, novoIdEndereco);
 	        update.setLong(2, usuario.getId());
@@ -200,7 +202,7 @@ public void atualizarEnderecoUsuario(Usuario usuario, long novoIdEndereco) {
 	        }
 	    }
 	}
- public void atualizarSenhaUsuario(Usuario usuario, String novoEndereco) {
+ public void atualizarSenhaUsuario(Usuario usuario, String novoSenha) {
 	    
 	    Connection conexao = null;
 	    PreparedStatement update = null;
@@ -208,9 +210,9 @@ public void atualizarEnderecoUsuario(Usuario usuario, long novoIdEndereco) {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET id_endereco = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE usuario SET senha_usuario = ? WHERE id_usuario = ?");
 	        
-	        update.setString(1, novoEndereco);
+	        update.setString(1, novoSenha);
 	        update.setLong(2, usuario.getId());
 
 	        update.execute();

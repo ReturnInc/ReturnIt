@@ -22,7 +22,7 @@ public class DepositoDAOImp implements DepositoDAO {
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO deposito (data_deposito, quantidade_deposito, retornavel_deposito) VALUES (?,?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO deposito (data_deposito, quantidade_deposito, retornavel_deposito) VALUES (data(?),?,?)");
 	        
 	        insert.setDate(1, (java.sql.Date) deposito.getDataDeposito());
 	        insert.setInt(2,deposito.getQuantidadeDeposito());

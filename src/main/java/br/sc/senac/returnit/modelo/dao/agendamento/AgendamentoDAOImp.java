@@ -22,7 +22,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO usuario (nome, senha, id_endereco, id_contato) VALUES (?,date(?),?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO agendamento (realizado_agendamento, data_agendamento, id_empresa, id_cooperado) VALUES (?,date(?),?,?)");
 	        
 	        insert.setBoolean(1, agendamento.getRealizadoAgendamento());
 	        Calendar data = Calendar.getInstance();
@@ -96,7 +96,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET realizado_agendamento = ? WHERE id_agendamento = ?");
+	        update = conexao.prepareStatement("UPDATE agendamento SET realizado_agendamento = ? WHERE id_agendamento = ?");
 	        
 	        update.setBoolean(1, realizado);
 	        update.setLong(2, agendamento.getIdAgendamento());
@@ -131,7 +131,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET id_contato = ? WHERE id_agendamento = ?");
+	        update = conexao.prepareStatement("UPDATE agendamento SET id_contato = ? WHERE id_agendamento = ?");
 	        
 	        update.setDate(1, (java.sql.Date) dataAgendamento);
 	        update.setLong(2, agendamento.getIdAgendamento());
@@ -166,7 +166,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET id_empresa = ? WHERE id _agendamento= ?");
+	        update = conexao.prepareStatement("UPDATE agendamento SET id_empresa = ? WHERE id _agendamento= ?");
 	        
 	        update.setLong(1, novoIdEmpresa);
 	        update.setLong(2, agendamento.getIdAgendamento());
@@ -201,7 +201,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE usuario SET nome = ? WHERE id = ?");
+	        update = conexao.prepareStatement("UPDATE agendamento SET id_cooperado = ? WHERE id_agendamento = ?");
 	        
 	        update.setLong(1, novoIdContato);
 	        update.setLong(2, agendamento.getIdAgendamento());
@@ -241,7 +241,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 
 	        conexao = conectarBanco();
 	        consulta = conexao.createStatement();
-	        resultado = consulta.executeQuery("SELECT * FROM usuario");
+	        resultado = consulta.executeQuery("SELECT * FROM agendamento");
 	        Date dataAgendamento = null;
 	          
 	        while (resultado.next()) {

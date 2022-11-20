@@ -22,8 +22,6 @@ import br.sc.senac.returnit.modelo.entidade.usuario.*;
 
 	    List<Usuario> recuperarUsuarios();
 	    
-	    Usuario recuperarNomeUsuarios(String nomeUsuario);
-
 	    Usuario recuperarIdUsuario(long IdUsuario);
 	    
 }

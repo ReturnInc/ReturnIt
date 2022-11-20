@@ -22,7 +22,8 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO agendamento (realizado_agendamento, data_agendamento, id_empresa, id_cooperado) VALUES (?,date(?),?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO agendamento (realizado_agendamento, data_agendamento, id_empresa, id_cooperado) VALUES (?,date(?),?,?)",
+	        		PreparedStatement.RETURN_GENERATED_KEYS);
 	        
 	        insert.setBoolean(1, agendamento.getRealizadoAgendamento());
 	        Calendar data = Calendar.getInstance();
@@ -32,7 +33,13 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	        insert.setLong(4, agendamento.getIdCooperado());
 
 	        insert.execute();
+	        ResultSet chavePrimaria = insert.getGeneratedKeys();
+			if (chavePrimaria.next())
+				agendamento.setIdAgendamento(chavePrimaria.getLong(1));
 
+
+
+	        
 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }

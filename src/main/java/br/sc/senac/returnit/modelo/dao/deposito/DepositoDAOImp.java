@@ -11,7 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.sc.senac.returnit.modelo.dao.retornavel.RetornavelDAOImp;
 import br.sc.senac.returnit.modelo.entidade.deposito.Deposito;
+import br.sc.senac.returnit.modelo.entidade.retornavel.Retornavel;
 
 public class DepositoDAOImp implements DepositoDAO {
 	public void inserirDeposito(Deposito deposito) {
@@ -22,13 +24,21 @@ public class DepositoDAOImp implements DepositoDAO {
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO deposito (data_deposito, quantidade_deposito, retornavel_deposito) VALUES (data(?),?,?)");
-	        
-	        insert.setDate(1, (java.sql.Date) deposito.getDataDeposito());
+	        insert = conexao.prepareStatement("INSERT INTO deposito (data_deposito, quantidade_deposito, retornavel_deposito) VALUES (?,?,?)",
+	        		PreparedStatement.RETURN_GENERATED_KEYS);
+	        insert.setDate(1,deposito.getDataDeposito());
 	        insert.setInt(2,deposito.getQuantidadeDeposito());
-	        insert.setLong(3, deposito.getRetornavelDeposito());
+	       
+	        Retornavel retornavel = deposito.getRetornavelDeposito();
+	        insert.setLong(3, retornavel.getIdRetornavel() );
 	        insert.execute();
 
+	        ResultSet chavePrimaria = insert.getGeneratedKeys();
+			if (chavePrimaria.next())
+			deposito.setIdDeposito(chavePrimaria.getLong(1));
+				// inseridas linhas 32 a 35 para trazer o resultado do generated_keys
+
+	        
 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }
@@ -213,8 +223,11 @@ public class DepositoDAOImp implements DepositoDAO {
 	        	long idDeposito = resultado.getLong("id_deposito");
 		        Date dataDeposito = resultado.getDate("date_deposito");
 		        int quantidadeDeposito = resultado.getInt("quantidade_deposito"); 
-		        long retornavelDeposito = resultado.getLong("retornavel_deposito");
-		        depositos.add(new Deposito( idDeposito, dataDeposito, quantidadeDeposito, retornavelDeposito));
+		        
+		        
+		        RetornavelDAOImp retornaveldao = new RetornavelDAOImp();
+		        Retornavel retornavel = retornaveldao.recuperarRetornavelId(resultado.getLong("retornavel_deposito"));
+		        depositos.add(new Deposito( idDeposito, (java.sql.Date) dataDeposito, quantidadeDeposito, retornavel));
 	            
 
 	         
@@ -276,8 +289,9 @@ public class DepositoDAOImp implements DepositoDAO {
 	        	long idDeposito = resultado.getLong("id_deposito");
 		        Date dataDeposito = resultado.getDate("date_deposito");
 		        int quantidadeDeposito = resultado.getInt("quantidade_deposito"); 
-		        long retornavelDeposito = resultado.getLong("retornavel_deposito");
-		        depositos.add(new Deposito( idDeposito, dataDeposito, quantidadeDeposito, retornavelDeposito));
+		        Retornavel retornavel = new Retornavel();
+		        retornavel.setIdRetornavel(resultado.getLong("retornavel_deposito"));
+		        depositos.add(new Deposito( idDeposito, (java.sql.Date) dataDeposito, quantidadeDeposito, retornavel));
 	            
 
 	         

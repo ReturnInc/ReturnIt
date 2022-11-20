@@ -19,13 +19,21 @@ public class ContatoDAOImp implements ContatoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO contato (telefone_contato, email_contato) VALUES (?,?)");
-	        
+	        insert = conexao.prepareStatement("INSERT INTO contato (telefone_contato, email_contato) VALUES (?,?)",
+					PreparedStatement.RETURN_GENERATED_KEYS);
 	        insert.setString(1, contato.getTelefone());
 	        insert.setString(2,contato.getEmail());
 
 	        insert.execute();
 
+
+			ResultSet chavePrimaria = insert.getGeneratedKeys();
+
+			if (chavePrimaria.next())
+				contato.setIdContato(chavePrimaria.getLong(1));
+			// inseridas linhas 32 a 35 para trazer o resultado do generated_keys
+
+	        
 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }
@@ -162,14 +170,17 @@ public class ContatoDAOImp implements ContatoDAO{
  	    try {
 
  	        conexao = conectarBanco();
- 	        consulta = conexao.prepareStatement("SELECT * FROM contato where id_contato == ? ");
- 	        consulta.setLong(1, idContato);
- 	        resultado = consulta.executeQuery();
- 	       
+ 	        consulta = conexao.prepareStatement("SELECT * FROM contato where id_contato = ?");
+ 	       consulta.setLong(1, idContato);
+ 	       String aux = "SELECT * FROM contato where id_contato = "+idContato;
+ 	        resultado = consulta.executeQuery(aux);
+ 	       if(resultado.next()){
+ 	        
  	        String telefoneContato = resultado.getString("telefone_contato");
  	        String emailContato = resultado.getString("email_contato");
- 	        contato = new Contato(idContato, telefoneContato, emailContato);
-
+ 	       contato = new Contato(idContato, telefoneContato, emailContato);
+ 	       
+ 	       }
  	    } catch (SQLException erro) {
  	        erro.printStackTrace();
  	    }

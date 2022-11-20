@@ -20,7 +20,9 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			insert = conexao.prepareStatement("INSERT INTO retornal (material, marca_retonavel, modelo_retornavel, empresa_cnpj) VALUES (?,?,?,?)");
+			insert = conexao.prepareStatement("INSERT INTO retornavel (material, marca_retornavel, modelo_retornavel, cnpj_empresa) VALUES (?,?,?,?)",
+
+					PreparedStatement.RETURN_GENERATED_KEYS);
 
 			insert.setString(1, retornavel.getMaterial());
 			insert.setString(2, retornavel.getMarca());
@@ -29,6 +31,15 @@ public class RetornavelDAOImp implements RetornavelDAO {
 
 			insert.execute();
 
+			ResultSet chavePrimaria = insert.getGeneratedKeys();
+			if (chavePrimaria.next())
+			retornavel.setIdRetornavel(chavePrimaria.getLong(1));
+				// inseridas linhas 32 a 35 para trazer o resultado do generated_keys
+
+
+
+
+			
 		} catch (SQLException erro) {
 			erro.printStackTrace();
 		}
@@ -58,7 +69,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			delete = conexao.prepareStatement("DELETE FROM retornavel WHERE id = ?");
+			delete = conexao.prepareStatement("DELETE FROM retornavel WHERE id_retornavel = ?");
 
 			delete.setLong(1, retornavel.getIdRetornavel());
 
@@ -93,7 +104,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE retornavel SET material = ? WHERE id = ?");
+			update = conexao.prepareStatement("UPDATE retornavel SET material = ? WHERE id_retornavel = ?");
 			
 			update.setString(1, novoMaterial);
 			update.setLong(2, retornavel.getIdRetornavel());
@@ -129,7 +140,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE retornavel SET modelo_retornavel = ? WHERE id = ?");
+			update = conexao.prepareStatement("UPDATE retornavel SET modelo_retornavel = ? WHERE id_retornavel = ?");
 			
 			update.setString(1, novoModeloRetornavel);
 			update.setLong(2, retornavel.getIdRetornavel());
@@ -165,7 +176,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE retornavel SET marca_retornavel = ? WHERE id = ?");
+			update = conexao.prepareStatement("UPDATE retornavel SET marca_retornavel = ? WHERE id_retornavel = ?");
 			
 			update.setString(1, novaMarcaRetornavel);
 			update.setLong(2, retornavel.getIdRetornavel());
@@ -201,7 +212,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			update = conexao.prepareStatement("UPDATE retornavel SET empresa_cnpj = ? WHERE id = ?");
+			update = conexao.prepareStatement("UPDATE retornavel SET cnpj_empreas = ? WHERE id_retornavel = ?");
 			
 			update.setString(1, novoCnpjEmpresa);
 			update.setLong(2, retornavel.getIdRetornavel());
@@ -245,12 +256,12 @@ public class RetornavelDAOImp implements RetornavelDAO {
 
 			while (resultado.next()) {
 
-				int id = resultado.getInt("id");
+				int id = resultado.getInt("id_retornavel");
 				String material = resultado.getString("material");
 				String marca = resultado.getString("marca_retornavel");
 				String  modelo = resultado.getString("modelo_retornavel");
-				String cnpjEmpresa = resultado.getString("empresa_cnpj");
-
+				String cnpjEmpresa = resultado.getString("cnpj_empresa");
+System.out.print(modelo);
 				retornaveis.add(new Retornavel(id, material, marca, modelo, cnpjEmpresa));
 			}
 
@@ -290,14 +301,14 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM retornavel where id = ? ");
+			consulta = conexao.prepareStatement("SELECT * FROM retornavel where id_retornavel = ? ");
 			consulta.setLong(1, idRetornavel);
 			resultado = consulta.executeQuery();
 			
 			String material = resultado.getString("material");
 			String marca = resultado.getString("marca_retornavel");
 			String  modelo = resultado.getString("modelo_retornavel");
-			String cnpjEmpresa = resultado.getString("empresa_cnpj");
+			String cnpjEmpresa = resultado.getString("cnpj_empresa");
 
 			retornavel = new Retornavel(idRetornavel, material, marca, modelo, cnpjEmpresa);
 
@@ -338,13 +349,13 @@ public class RetornavelDAOImp implements RetornavelDAO {
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM retornavel where empresa_cnpj = ? ");
+			consulta = conexao.prepareStatement("SELECT * FROM retornavel where cnpj_empresa = ? ");
 			consulta.setString(1, cnpjEmpresa);
 			resultado = consulta.executeQuery();
 			
 			while (resultado.next()) {
 			
-				int id = resultado.getInt("id");
+				int id = resultado.getInt("id_retornavel");
 				String material = resultado.getString("material");
 				String marca = resultado.getString("marca_retornavel");
 				String  modelo = resultado.getString("modelo_retornavel");
@@ -382,7 +393,7 @@ public class RetornavelDAOImp implements RetornavelDAO {
 
 
 	private Connection conectarBanco() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://localhost/cadastro?user=admin&password=password");
+		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 	}
 
 

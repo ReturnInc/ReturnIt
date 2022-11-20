@@ -1,6 +1,7 @@
 package br.sc.senac.returnit.modelo.dao.empresa;
 import br.sc.senac.returnit.modelo.entidade.empresa.*;
 import java.util.List;
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,11 +24,9 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			conexao = conectarBanco();
 			insert = conexao.prepareStatement("INSERT INTO empresa (cnpj_empresa, id_usuario ) VALUES (?,?)");
 
-			insert.setString(1, empresa.getCnpj());
-			Usuario usuario = empresa.getUsuario();
-			insert.setLong(3, usuario.getId() );
-			
 
+			insert.setString(1, empresa.getCnpj());
+			insert.setLong(2, empresa.getId()) ;
 			insert.execute();
 
 		} catch (SQLException erro) {
@@ -55,7 +54,6 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		
 		Connection conexao = null;
 		PreparedStatement delete = null;
-		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 
 		try {
 
@@ -65,8 +63,6 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			delete.setLong(1, empresa.getId());
 
 			delete.execute();
-			usuarioDAO.deletarUsuario(empresa.getUsuario());
-
 		} catch (SQLException erro) {
 			erro.printStackTrace();
 		}
@@ -179,9 +175,8 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			
 				
 				String cnpj = resultado.getString("cnpj_empresa");
-				Usuario usuario = usuarioDAO.recuperarIdUsuario(resultado.getLong("id_usuario"));
-
-				empresas.add(new Empresa(cnpj, usuario));
+				long idUsuario = resultado.getLong("id_usuario");
+				empresas.add(new Empresa(idUsuario,cnpj));
 			}
 
 		} catch (SQLException erro) {
@@ -210,51 +205,6 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		return empresas;
 	}
 	
-	public Empresa recuperarEmpresaCnpj(String cnpjEmpresa) {
-		
-		Connection conexao = null;
-		PreparedStatement consulta = null;
-		ResultSet resultado = null;
-		Empresa empresa = null;
-		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl(); 
-
-		try {
-
-			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM empresa where cnpj_empresa == ?");
-			consulta.setString(1, cnpjEmpresa);
-			resultado = consulta.executeQuery();
-
-			String cnpj = resultado.getString("cnpj_empresa");
-			Usuario usuario = usuarioDAO.recuperarIdUsuario(resultado.getLong("id_usuario"));
-			empresa = new Empresa(cnpj, usuario);
-			
-
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-
-		finally {
-
-			try {
-
-				if (resultado != null)
-					resultado.close();
-
-				if (consulta != null)
-					consulta.close();
-
-				if (conexao != null)
-					conexao.close();
-
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
-
-		return empresa;
-	}
 
 	public Empresa recuperarEmpresaIdUsuario(long idUsuario) {
 		
@@ -266,14 +216,16 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM empresa where id_usuario == ?");
+			consulta = conexao.prepareStatement("SELECT * FROM empresa where id_usuario = ?");
 			consulta.setLong(1, idUsuario);
 			resultado = consulta.executeQuery();
 
 			String cnpj = resultado.getString("cnpj_empresa");
-			Usuario usuario = usuarioDAO.recuperarIdUsuario(resultado.getLong("id_usuario"));
-			empresa = new Empresa(cnpj, usuario);
+		
+			empresa = new Empresa();
+					empresa.setCnpj(cnpj);
 
+						empresa.setId(idUsuario);
 		} catch (SQLException erro) {
 			erro.printStackTrace();
 		}
@@ -301,7 +253,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 	}
 
 
-	private Connection conectarBanco() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://localhost/cadastro?user=admin&password=password");
+	public Connection conectarBanco() throws SQLException {
+		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 	}
 }

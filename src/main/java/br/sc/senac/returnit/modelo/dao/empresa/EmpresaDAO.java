@@ -1,4 +1,7 @@
 package br.sc.senac.returnit.modelo.dao.empresa;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import br.sc.senac.returnit.modelo.entidade.empresa.*;
 public interface EmpresaDAO {
@@ -14,8 +17,15 @@ public interface EmpresaDAO {
 
 		List<Empresa> recuperarEmpresas();
 
-		Empresa recuperarEmpresaCnpj(String cnpjEmpresa);
+
 		
 		Empresa recuperarEmpresaIdUsuario(long IdUsuario);
+		
+		
+		
+
+
+
+
 }
 

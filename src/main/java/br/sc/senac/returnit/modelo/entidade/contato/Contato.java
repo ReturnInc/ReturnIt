@@ -1,15 +1,21 @@
 package br.sc.senac.returnit.modelo.entidade.contato;
 public class Contato {
 
-	public Contato(long idContato,String telefoneContato , String emailContato) {
+	private long idContato;
+	private String telefoneContato;
+	private String emailContato;
+
+	public Contato() {
+		// TODO Auto-generated constructor stub
+	}
+	
+		public Contato(long idContato,String telefoneContato , String emailContato) {
 		super();
 		this.idContato = idContato;
 		this.telefoneContato = telefoneContato;
 		this.emailContato = emailContato;
 	}
-	private long idContato;
-	private String telefoneContato;
-	private String emailContato;
+
 	public String getTelefone() {
 		return telefoneContato;
 	}

@@ -1,6 +1,9 @@
 package br.sc.senac.returnit.modelo.entidade.deposito; 
 
-import java.util.Date;
+import java.sql.Date;
+
+
+import br.sc.senac.returnit.modelo.entidade.retornavel.Retornavel;
 
 
 public class Deposito {
@@ -8,10 +11,10 @@ public class Deposito {
 	private long idDeposito;
 	private Date dataDeposito;
 	private int quantidadeDeposito;
-	private long retornavelDeposito;
+	private Retornavel retornavelDeposito;
 	
 
-	public Deposito(long idDeposito, Date dataDeposito, int quantidadeDeposito, long retornavelDeposito) {
+	public Deposito(long idDeposito, Date dataDeposito, int quantidadeDeposito, Retornavel retornavelDeposito) {
 		super();
 		this.idDeposito = idDeposito;
 		this.dataDeposito = dataDeposito;
@@ -19,6 +22,10 @@ public class Deposito {
 		this.retornavelDeposito = retornavelDeposito;
 	}
 	
+	public Deposito() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public long getIdDeposito() {
 		return idDeposito;
 	}
@@ -37,10 +44,10 @@ public class Deposito {
 	public void setQuantidadeDeposito(int novaQuantidadeDeposito) {
 		this.quantidadeDeposito = novaQuantidadeDeposito;
 	}
-	public long getRetornavelDeposito() {
+	public Retornavel getRetornavelDeposito() {
 		return retornavelDeposito;
 	}
-	public void setRetornavelDeposito(long novoRetornavelDeposito) {
+	public void setRetornavelDeposito(Retornavel novoRetornavelDeposito) {
 		this.retornavelDeposito = novoRetornavelDeposito;
 	}
 	

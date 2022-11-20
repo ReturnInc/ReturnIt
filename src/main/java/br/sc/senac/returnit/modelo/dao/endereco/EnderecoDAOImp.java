@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
 public class EnderecoDAOImp {
@@ -18,14 +18,22 @@ public class EnderecoDAOImp {
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO endereco (numero_endereco, logradouro_endereco, complemento_endereco) VALUES (?,?,?)");
+	        insert = conexao.prepareStatement("INSERT INTO endereco (numero_casa_endereco, logradouro_endereco, complemento_endereco,bairro_endereco) VALUES (?,?,?,?)",
+	        		PreparedStatement.RETURN_GENERATED_KEYS);
 	        
 	        insert.setShort(1, endereco.getNumero());
 	        insert.setString(2, endereco.getLogradouro());
 	        insert.setString(3, endereco.getComplemento());
+	        insert.setString(4, endereco.getBairro());
 
 	        insert.execute();
+	        ResultSet chavePrimaria = insert.getGeneratedKeys();
 
+			if (chavePrimaria.next())
+				endereco.setIdEndereco(chavePrimaria.getLong(1));
+			// inseridas linhas 32 a 35 para trazer o resultado do generated_keys
+
+	        
 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }
@@ -90,7 +98,7 @@ public class EnderecoDAOImp {
 	    try {
 
 	        conexao = conectarBanco();
-	        update = conexao.prepareStatement("UPDATE endereco SET numero_endereco = ? WHERE id_endereco = ?");
+	        update = conexao.prepareStatement("UPDATE endereco SET numero_casa_endereco = ? WHERE id_endereco = ?");
 	        
 	        update.setShort(1, novoNumero);
 	        update.setLong(2, endereco.getIdEndereco());
@@ -187,25 +195,28 @@ public class EnderecoDAOImp {
     }
 }
     public Endereco recuperarEnderecoId(long idEndereco) {
- 		Connection conexao = null;
- 		PreparedStatement consulta = null;
-	    ResultSet resultado = null;
+       	Connection conexao = null;
+    	PreparedStatement consulta = null;
+ 	    ResultSet resultado = null;
 
-	    Endereco endereco = null;
+ 	    Endereco endereco = null;
 
-	    try {
+ 	    try {
 
-	        conexao = conectarBanco();
-	        consulta = conexao.prepareStatement("SELECT * FROM endereco where id_endereco == ? ");
-	        consulta.setLong(1, idEndereco);
-	        resultado = consulta.executeQuery();
-	       
-	        short numero = resultado.getShort("numero_endereco");
+ 	        conexao = conectarBanco();
+ 	        consulta = conexao.prepareStatement("SELECT * FROM endereco where id_contato = ?");
+ 	       consulta.setLong(1, idEndereco);
+ 	       String aux = "SELECT * FROM endereco where id_endereco = "+idEndereco;
+ 	        resultado = consulta.executeQuery(aux);
+ 	       if(resultado.next()){
+	        
+ 	    	   short numero = resultado.getShort("numero_casa_endereco");
 	        String logradouro = resultado.getString("logradouro_endereco");
 	        String complemento = resultado.getString("complemento_endereco");
-	        endereco = new Endereco(idEndereco, numero, logradouro, complemento);
-
-	    } catch (SQLException erro) {
+	        String bairro = resultado.getString("bairro_endereco");
+	        endereco = new Endereco(bairro,idEndereco, numero, logradouro, complemento);
+ 	       }
+ 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }
 

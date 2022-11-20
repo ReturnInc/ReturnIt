@@ -4,6 +4,9 @@ import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 
 public class Retornavel {
 
+	public Retornavel()
+	{}
+	
 	public Retornavel(long idRetornavel, String material, String marca, String modelo, String cnpjEmpresa) {
 		this.idRetornavel = idRetornavel;
 		this.material = material;
@@ -32,11 +35,7 @@ public class Retornavel {
 	public String getCnpjEmpresa() {
 		return cnpjEmpresa;
 	}
-	public Empresa getEmpresa() {
-		EmpresaDAOImp empresaDAO = new EmpresaDAOImp();
-		Empresa empresa = empresaDAO.recuperarEmpresaCnpj(cnpjEmpresa);
-		return empresa;
-	}
+	
 	public void setEmpresa(Empresa empresa) {
 		this.cnpjEmpresa = empresa.getCnpj();
 	}
@@ -49,7 +48,7 @@ public class Retornavel {
 	public long getIdRetornavel() {
 		return idRetornavel;
 	}
-	public void setIdRetornavel(int ponto) {
-		this.idRetornavel = ponto;
+	public void setIdRetornavel(long l) {
+		this.idRetornavel = l;
 	}	
 }

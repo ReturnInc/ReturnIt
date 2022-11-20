@@ -23,8 +23,10 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
 	    try {
 
+	    	
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO usuario (nome_usuario, senha_usuario, id_endereco, id_contato) VALUES (?,?,?,?)");
+        insert = conexao.prepareStatement("INSERT INTO usuario (nome_usuario, senha_usuario, id_endereco, id_contato) VALUES (?,?,?,?)"
+        		,PreparedStatement.RETURN_GENERATED_KEYS);
 	        
 	        insert.setString(1, usuario.getNome());
 	        insert.setString(2,usuario.getSenha());
@@ -37,6 +39,15 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
 	        insert.execute();
 
+	        ResultSet chavePrimaria = insert.getGeneratedKeys();
+
+			if (chavePrimaria.next())
+				usuario.setId(chavePrimaria.getLong(1));
+			// inseridas linhas 32 a 35 para trazer o resultado do generated_keys
+
+	        
+	    
+	        
 	    } catch (SQLException erro) {
 	        erro.printStackTrace();
 	    }
@@ -262,6 +273,7 @@ public List<Usuario> recuperarUsuarios() {
 	            endereco = enderecoDAO.recuperarEnderecoId(resultado.getLong("id_endereco")); 
 	            contato = contatoDAO.recuperarContatoId(resultado.getLong("id_contato"));
 	            String senha = resultado.getString("senha_usuario");
+	            
 	            usuarios.add(new Usuario(id, nome, endereco, contato, senha));
 	            
 
@@ -293,77 +305,24 @@ public List<Usuario> recuperarUsuarios() {
 
 	    return usuarios;
 	}
-public Usuario recuperarNomeUsuarios(String nomeUsuario) {
-		
-		Connection conexao = null;
-		PreparedStatement consulta = null;
-	    ResultSet resultado = null;
-	    ContatoDAOImp contatoDAO = new ContatoDAOImp();
-        EnderecoDAOImp enderecoDAO = new EnderecoDAOImp();
-	    Usuario usuario = null;
 
-	    try {
-
-	        conexao = conectarBanco();
-	        consulta = conexao.prepareStatement("SELECT * FROM usuario where nome_usuario == ? ");
-	        consulta.setString(1, nomeUsuario);
-	        resultado = consulta.executeQuery();
-	   
-
-	            long id = resultado.getLong("id_usuario");
-	            String nome = resultado.getString("nome_usuario");
-	            Endereco endereco = enderecoDAO.recuperarEnderecoId(resultado.getLong("id_endereco")); 
-	            Contato contato = contatoDAO.recuperarContatoId(resultado.getLong("id_contato"));
-	            String senha = resultado.getString("senha_usuario");
-	            usuario = new Usuario(id, nome, endereco, contato, senha);
-	            
-
-	         
-	        
-
-	    } catch (SQLException erro) {
-	        erro.printStackTrace();
-	    }
-
-	    finally {
-
-	        try {
-
-	            if (resultado != null)
-	                resultado.close();
-
-	            if (consulta != null)
-	                consulta.close();
-
-	            if (conexao != null)
-	                conexao.close();
-
-	        } catch (SQLException erro) {
-
-	            erro.printStackTrace();
-	        }
-	    }
-
-	 return usuario;
-	}
-		
 	
 public Usuario recuperarIdUsuario(long idUsuario) {
-
-	    Connection conexao = null;
-	    PreparedStatement consulta = null;
+	Connection conexao = null;
+	PreparedStatement consulta = null;
 	    ResultSet resultado = null;
+
 	    ContatoDAOImp contatoDAO = new ContatoDAOImp();
         EnderecoDAOImp enderecoDAO = new EnderecoDAOImp();
 	    Usuario usuario = null;
-
 	    try {
 
 	        conexao = conectarBanco();
-	        consulta = conexao.prepareStatement("SELECT * FROM usuario where id_usuario == ? ");
-	        consulta.setLong(1, idUsuario);
-	        resultado = consulta.executeQuery();
-	   
+	        consulta = conexao.prepareStatement("SELECT * FROM usuario where id_usuario = ?");
+	       consulta.setLong(1, idUsuario);
+	       String aux = "SELECT * FROM usuario where id_usuario = "+idUsuario;
+	        resultado = consulta.executeQuery(aux);
+	       if(resultado.next()){
 
 	            long id = resultado.getLong("id_usuario");
 	            String nome = resultado.getString("nome_usuario");
@@ -371,9 +330,7 @@ public Usuario recuperarIdUsuario(long idUsuario) {
 	            Contato contato = contatoDAO.recuperarContatoId(resultado.getLong("id_contato"));
 	            String senha = resultado.getString("senha_usuario");
 	            usuario = new Usuario(id, nome, endereco, contato, senha);
-	            
-
-	         
+	       }	         
 	        
 
 	    } catch (SQLException erro) {

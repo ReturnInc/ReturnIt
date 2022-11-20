@@ -10,7 +10,9 @@ public class Usuario {
 	private Contato contato;
 	private String senha;
 	
-	
+	public Usuario() {
+
+	}
 	
 	public Usuario(long idUsuario, String nome, Endereco endereco, Contato contato, String senha) {
 		this.idUsuario = idUsuario;
@@ -20,6 +22,8 @@ public class Usuario {
 		this.senha = senha;
 	}
 	
+	
+
 	public long getId() {
 		return idUsuario;
 	}

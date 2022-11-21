@@ -1,23 +1,24 @@
 package br.sc.senac.returnit.modelo.entidade.deposito; 
 
-import java.sql.Date;
+import java.util.Date;
 
 
 import br.sc.senac.returnit.modelo.entidade.retornavel.Retornavel;
 
+import br.sc.senac.returnit.modelo.dao.retornavel.*;
 
 public class Deposito {
 	
 	private long idDeposito;
 	private Date dataDeposito;
 	private int quantidadeDeposito;
-	private Retornavel retornavelDeposito;
+	private long retornavelDeposito;
 	
 
-	public Deposito(long idDeposito, Date dataDeposito, int quantidadeDeposito, Retornavel retornavelDeposito) {
+	public Deposito(long idDeposito, Date dataDeposito2, int quantidadeDeposito, long retornavelDeposito) {
 		super();
 		this.idDeposito = idDeposito;
-		this.dataDeposito = dataDeposito;
+		this.dataDeposito = dataDeposito2;
 		this.quantidadeDeposito = quantidadeDeposito;
 		this.retornavelDeposito = retornavelDeposito;
 	}
@@ -45,10 +46,11 @@ public class Deposito {
 		this.quantidadeDeposito = novaQuantidadeDeposito;
 	}
 	public Retornavel getRetornavelDeposito() {
-		return retornavelDeposito;
+		RetornavelDAOImp retornavelDAO = new RetornavelDAOImp();
+		return retornavelDAO.recuperarRetornavelId(retornavelDeposito);
 	}
 	public void setRetornavelDeposito(Retornavel novoRetornavelDeposito) {
-		this.retornavelDeposito = novoRetornavelDeposito;
+			this.retornavelDeposito = novoRetornavelDeposito.getIdRetornavel();
 	}
 	
 

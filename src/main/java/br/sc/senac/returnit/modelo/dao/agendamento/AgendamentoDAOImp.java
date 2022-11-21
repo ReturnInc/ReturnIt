@@ -22,7 +22,7 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 	    try {
 
 	        conexao = conectarBanco();
-	        insert = conexao.prepareStatement("INSERT INTO agendamento (realizado_agendamento, data_agendamento, id_empresa, id_cooperado) VALUES (?,date(?),?,?)",
+	        insert = conexao.prepareStatement("INSERT INTO agendamento (realizado_agendamento, data_agendamento, id_empresa, id_cooperado) VALUES (?,?,?,?)",
 	        		PreparedStatement.RETURN_GENERATED_KEYS);
 	        
 	        insert.setBoolean(1, agendamento.getRealizadoAgendamento());

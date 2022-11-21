@@ -1,7 +1,6 @@
 package br.sc.senac.returnit.modelo.dao.empresa;
 import br.sc.senac.returnit.modelo.entidade.empresa.*;
 import java.util.List;
-import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,8 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
-import br.sc.senac.returnit.modelo.entidade.usuario.*;
+
 
 public class EmpresaDAOImp implements EmpresaDAO {
 
@@ -169,7 +167,6 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			conexao = conectarBanco();
 			consulta = conexao.createStatement();
 			resultado = consulta.executeQuery("SELECT * FROM empresa");
-			UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl(); 
 			while (resultado.next()) {
 
 			
@@ -212,7 +209,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		PreparedStatement consulta = null;
 		ResultSet resultado = null;
 		Empresa empresa = null;
-		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl(); 
+
 		try {
 
 			conexao = conectarBanco();

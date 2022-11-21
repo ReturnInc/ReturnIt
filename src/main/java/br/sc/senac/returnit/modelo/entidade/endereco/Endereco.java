@@ -10,7 +10,7 @@ public class Endereco {
 	public Endereco() {
 	}
 
-	public Endereco(String bairro,long idEndereco, short numero, String logradouro, String complemento) {
+	public Endereco(long idEndereco, short numero, String logradouro, String complemento, String bairro) {
 		super();
 		this.bairro = bairro;
 		this.idEndereco = idEndereco;

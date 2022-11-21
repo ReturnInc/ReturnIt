@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
 public class EnderecoDAOImp {
@@ -214,7 +213,7 @@ public class EnderecoDAOImp {
 	        String logradouro = resultado.getString("logradouro_endereco");
 	        String complemento = resultado.getString("complemento_endereco");
 	        String bairro = resultado.getString("bairro_endereco");
-	        endereco = new Endereco(bairro,idEndereco, numero, logradouro, complemento);
+	        endereco = new Endereco(idEndereco, numero, logradouro, complemento, bairro);
  	       }
  	    } catch (SQLException erro) {
 	        erro.printStackTrace();

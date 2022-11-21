@@ -10,7 +10,12 @@ import br.sc.senac.returnit.modelo.entidade.endereco.*;
 public class TestUsuario {
 	public static void main(String [] args) {
 		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
-	
+		Endereco endereco = new Endereco((long) 1213215,(short) 230, "Rua XV de novembro", "casa", "Testo Central");
+		// Intanciando a Classe Endereco que é um atributo do Usuario  
+		Contato contato = new Contato((long) 1545454,"(47) 992503339","kronergamer@gmail.com" );
+		// Intanciando a Classe Contato que é um atributo do Usuario  
+		Usuario usuario = new Usuario((long) 12132131, "Paulo", endereco, contato, "1492");
+		usuarioDAO.inserirUsuario(usuario);
 		
 		
 		
@@ -36,9 +41,9 @@ public class TestUsuario {
 	public static List<Usuario> testRecuperarUsuarios(UsuarioDAOImpl usuarioDAO) {
 		return usuarioDAO.recuperarUsuarios();
 	}
-	public static Usuario testRecuperarNomeUsuario(UsuarioDAOImpl usuarioDAO) {
-		return usuarioDAO.recuperarNomeUsuarios(null);
-	}
+	//public static Usuario testRecuperarNomeUsuario(UsuarioDAOImpl usuarioDAO) {
+		//return usuarioDAO.recuperarNomeUsuarios(null);
+	//}
 	public static Usuario testRecuperarIdUsuario(UsuarioDAOImpl usuarioDAO, long idUsuario) {
 		return usuarioDAO.recuperarIdUsuario(idUsuario);
 	}
@@ -49,7 +54,7 @@ public class TestUsuario {
 		//primeiraRota(); 
 		//Recebe a seguinte entrada: 
 		//Uma intancia da Classe UsuarioDAOImpl
-		Endereco endereco = new Endereco((long) 1213215,(short) 230, "Rua XV de novembro", "casa");
+		Endereco endereco = new Endereco((long) 1213215,(short) 230, "Rua XV de novembro", "casa", "Testo Central");
 		// Intanciando a Classe Endereco que é um atributo do Usuario  
 		Contato contato = new Contato((long) 1545454,"(47) 992503339","kronergamer@gmail.com" );
 		// Intanciando a Classe Contato que é um atributo do Usuario  

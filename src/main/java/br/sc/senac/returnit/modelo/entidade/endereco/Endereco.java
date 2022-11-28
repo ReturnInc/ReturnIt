@@ -1,5 +1,6 @@
 package br.sc.senac.returnit.modelo.entidade.endereco;
 
+
 public class Endereco {
 
 	private long idEndereco;

@@ -11,19 +11,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.sc.senac.returnit.modelo.dao.cooperado.*;
 import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAO;
 import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
-public class WebServentRoute extends HttpServlet {
-	
+public class WebServentRouteCooperado extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
-	private  dao;
+	private CooperadoDAO dao;
 
 	public void init() {
-		dao = new EmpresaDAOImp();
+		dao = new CooperadoDAOImpl();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -72,7 +73,7 @@ public class WebServentRoute extends HttpServlet {
 	private void listarEmpresas(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Empresa> empresas = dao.recuperarEmpresas();
+				List<Empresa> empresas = dao();
 				request.setAttribute("contatos", empresas);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
 				dispatcher.forward(request, response);

@@ -1,18 +1,18 @@
 package br.sc.senac.returnit.modelo.entidade.empresa;
 
+import br.sc.senac.returnit.modelo.entidade.contato.Contato;
+import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
+import br.sc.senac.returnit.modelo.entidade.usuario.*;
 
-public class Empresa {
+public class Empresa extends Usuario {
 	private long id;
 	private String cnpj;
-
-	public Empresa() {
-		 
-	}
 	
-	public Empresa(long id,String cnpj) {
-		super();
+	public Empresa(long id, long idUsuario, String nome,  Endereco endereco, Contato contato, String cnpj, String senha) {
+		super(idUsuario, nome,  endereco, contato, senha);
 		this.id= id;
 		this.cnpj = cnpj;
+		
 		
 		
 	}

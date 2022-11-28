@@ -205,7 +205,7 @@ public class DepositoDAOImp implements DepositoDAO {
 	}
 
 
-	public List<Deposito> recuperarUsuarios(){
+	public List<Deposito> recuperarDepositos(){
 		Connection conexao = null;
 	    Statement consulta = null;
 	    ResultSet resultado = null;

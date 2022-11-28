@@ -11,19 +11,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAO;
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
-import br.sc.senac.returnit.modelo.entidade.contato.Contato;
-import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
-import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
-public class WebServentRoute extends HttpServlet {
-	
+import br.sc.senac.returnit.modelo.dao.retornavel.RetornavelDAO;
+import br.sc.senac.returnit.modelo.dao.retornavel.RetornavelDAOImp;
+import br.sc.senac.returnit.modelo.entidade.retornavel.Retornavel;
+
+public class WebServentRouteRetornavel extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
-	private  dao;
+	private RetornavelDAO dao;
 
 	public void init() {
-		dao = new EmpresaDAOImp();
+		dao = new RetornavelDAOImp();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -49,7 +48,7 @@ public class WebServentRoute extends HttpServlet {
 		break;
 					
 		case "/deletar":
-			deletarEmpresa(request, response);
+			deletarRetornavel(request, response);
 		break;
 					
 		case "/editar":
@@ -57,11 +56,11 @@ public class WebServentRoute extends HttpServlet {
 		break;
 					
 		case "/atualizar":
-			atualizarEmpresa(request, response);
+			atualizarRetornavel(request, response);
 		break;
 					
 		default:
-			listarEmpresas(request, response);
+			listarRetornaveis(request, response);
 		break;
 			}
 
@@ -69,10 +68,10 @@ public class WebServentRoute extends HttpServlet {
 			throw new ServletException(ex);
 		}
 		}
-	private void listarEmpresas(HttpServletRequest request, HttpServletResponse response)
+	private void listarRetornaveis(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Empresa> empresas = dao.recuperarEmpresas();
+				List<Retornavel> empresas = dao.recuperarRetornaveis();
 				request.setAttribute("contatos", empresas);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
 				dispatcher.forward(request, response);
@@ -89,8 +88,8 @@ public class WebServentRoute extends HttpServlet {
 			throws SQLException, ServletException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));
-				Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-				request.setAttribute("Empresa", empresa);
+				Retornavel retornavel = dao.recuperarRetornavelId(id);
+				request.setAttribute("Retornavel", retornavel);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
 				dispatcher.forward(request, response);
 			}
@@ -98,42 +97,35 @@ public class WebServentRoute extends HttpServlet {
 		private void inserirEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			
-			String cnpj = request.getParameter("cnpj");
-			String nome = request.getParameter("nome");
-			String telefoneContato = request.getParameter("telefone");
-			String emailContato = request.getParameter("email");
-			String numeroEnderecoStr = request.getParameter("numero");
-			Short numeroEndereco = Short.valueOf(numeroEnderecoStr);
-			String logradouroEndereco  = request.getParameter("logradouro");
-			String complementoEndereco = request.getParameter("complemento");
-			String bairroEndereco = request.getParameter("bairro");
-			String senha = request.getParameter("senha");
+			String material = request.getParameter("cnpj");
+			String marca = request.getParameter("nome");
+			String modelo = request.getParameter("telefone");
+			String cnpjEmpresa = request.getParameter("email");
 			
-			
-			Contato contato = new Contato((long) -1, telefoneContato, emailContato);
-			Endereco endereco = new Endereco((long) -1, numeroEndereco, logradouroEndereco, complementoEndereco, bairroEndereco);
-			
-			dao.inserirEmpresa(new Empresa((long) -1, (long) -1, nome, endereco, contato,  cnpj, senha));
+			dao.inserirRetornavel(new Retornavel((long) -1, material, marca, modelo, cnpjEmpresa));
 			response.sendRedirect("listar");
 		}
 
-		private void atualizarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-				
+		private void atualizarRetornavel(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {				
+			
 			long id = Long.parseLong(request.getParameter("id"));
-			String idUsuarioStr = request.getParameter("idUsuario");
 			String cnpjEmpresa = request.getParameter("cnpjEmpresa");
-			Long idUsuario = Long.valueOf(idUsuarioStr);
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.atualizarCnpjEmpresa(empresa, cnpjEmpresa);
-			dao.atualizarIdUsuario(empresa, idUsuario);
+			String material = request.getParameter("material");
+			String marcaRetornavel = request.getParameter("material");
+			String modeloRetornavel = request.getParameter("material");
+			Retornavel retornavel = dao.recuperarRetornavelId(id);
+			dao.atualizarMaterial(retornavel, material);
+			dao.atualizarCnpjEmpresa(retornavel, cnpjEmpresa);
+			dao.atualizarMarcaRetornavel(retornavel, marcaRetornavel);
+			dao.atualizarModeloRetornavel(retornavel, modeloRetornavel);
 			response.sendRedirect("listar");
 		}
 
-		private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void deletarRetornavel(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.deletarEmpresa(empresa);
+			Retornavel retornavel = dao.recuperarRetornavelId(id);
+			dao.deletarRetornavel(retornavel);
 			response.sendRedirect("listar");
 		}
 		

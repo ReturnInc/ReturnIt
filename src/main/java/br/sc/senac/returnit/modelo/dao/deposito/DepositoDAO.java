@@ -17,7 +17,7 @@ public interface DepositoDAO {
     void atualizarRetornavelDeposito(Deposito deposito, long novoRetornavelDeposito);
 
 
-    List<Deposito> recuperarUsuarios();
+    List<Deposito> recuperarDepositos();
     
     List<Deposito> recuperarDepositoPeriodo(Date dataInicio, Date dataFim);
     

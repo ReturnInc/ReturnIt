@@ -1,4 +1,5 @@
 package br.sc.senac.returnit.modelo.entidade.usuario;
+
 import br.sc.senac.returnit.modelo.entidade.contato.*;
 import br.sc.senac.returnit.modelo.entidade.endereco.*;
 
@@ -9,10 +10,6 @@ public class Usuario {
 	private Endereco endereco;
 	private Contato contato;
 	private String senha;
-	
-	public Usuario() {
-
-	}
 	
 	public Usuario(long idUsuario, String nome, Endereco endereco, Contato contato, String senha) {
 		this.idUsuario = idUsuario;

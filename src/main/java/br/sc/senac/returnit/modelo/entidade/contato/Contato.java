@@ -9,7 +9,7 @@ public class Contato {
 		// TODO Auto-generated constructor stub
 	}
 	
-		public Contato(long idContato,String telefoneContato , String emailContato) {
+		public Contato(long idContato, String telefoneContato , String emailContato) {
 		super();
 		this.idContato = idContato;
 		this.telefoneContato = telefoneContato;

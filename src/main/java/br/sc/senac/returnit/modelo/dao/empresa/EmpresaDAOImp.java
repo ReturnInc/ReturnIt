@@ -1,5 +1,10 @@
 package br.sc.senac.returnit.modelo.dao.empresa;
+
+import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.empresa.*;
+import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
+import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
+import br.sc.senac.returnit.modelo.dao.usuario.*;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -167,13 +172,18 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			conexao = conectarBanco();
 			consulta = conexao.createStatement();
 			resultado = consulta.executeQuery("SELECT * FROM empresa");
+			UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 			while (resultado.next()) {
 
 			
 				
 				String cnpj = resultado.getString("cnpj_empresa");
 				long idUsuario = resultado.getLong("id_usuario");
-				empresas.add(new Empresa(idUsuario,cnpj));
+				long idEmpresa = resultado.getLong("id_usuario");
+				Usuario usuario = usuarioDAO.recuperarIdUsuario(idUsuario);
+				Endereco endereco = usuario.getEndereco();
+				Contato contato = usuario.getContato();
+				empresas.add(new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha()));
 			}
 
 		} catch (SQLException erro) {
@@ -209,7 +219,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		PreparedStatement consulta = null;
 		ResultSet resultado = null;
 		Empresa empresa = null;
-
+		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 		try {
 
 			conexao = conectarBanco();
@@ -218,8 +228,11 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			resultado = consulta.executeQuery();
 
 			String cnpj = resultado.getString("cnpj_empresa");
-		
-			empresa = new Empresa();
+			long idEmpresa = resultado.getLong("id_Empresa");
+			Usuario usuario = usuarioDAO.recuperarIdUsuario(idUsuario);
+			Endereco endereco = usuario.getEndereco();
+			Contato contato = usuario.getContato();
+			empresa = new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha());
 					empresa.setCnpj(cnpj);
 
 						empresa.setId(idUsuario);
@@ -248,7 +261,54 @@ public class EmpresaDAOImp implements EmpresaDAO {
 
 		return empresa;
 	}
+	public Empresa recuperarEmpresaIdEmpresa(long idEmpresa) {
+		
+		Connection conexao = null;
+		PreparedStatement consulta = null;
+		ResultSet resultado = null;
+		Empresa empresa = null;
+		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+		try {
 
+			conexao = conectarBanco();
+			consulta = conexao.prepareStatement("SELECT * FROM empresa where id_usuario = ?");
+			consulta.setLong(1, idEmpresa);
+			resultado = consulta.executeQuery();
+
+			String cnpj = resultado.getString("cnpj_empresa");
+			long idUsuario = resultado.getLong("id_Usuario");
+			Usuario usuario = usuarioDAO.recuperarIdUsuario(idUsuario);
+			Endereco endereco = usuario.getEndereco();
+			Contato contato = usuario.getContato();
+			empresa = new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha());
+					empresa.setCnpj(cnpj);
+
+						empresa.setId(idUsuario);
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return empresa;
+	}
 
 	public Connection conectarBanco() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");

@@ -18,6 +18,7 @@ import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
+import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
 
 public class WebServentRouteReciclador extends HttpServlet {
 
@@ -74,7 +75,7 @@ public class WebServentRouteReciclador extends HttpServlet {
 	private void listarRecicladores(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Empresa> empresas = dao.recuperarRecicladores();
+				List<Reciclador> empresas = dao.recuperarRecicladores();
 				request.setAttribute("contatos", empresas);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
 				dispatcher.forward(request, response);

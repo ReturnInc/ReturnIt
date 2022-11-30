@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
 import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
@@ -59,8 +60,9 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        
 	        delete.execute();
 	        
-			Usuario usuario = new Usuario();    
-			usuario.setId(reciclador.getId_usuario());
+			UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+			Usuario usuario = usuarioDAO.recuperarIdUsuario(reciclador.getId_usuario());
+			usuarioDAO.deletarUsuario(usuario);
 			
 	        
 	    } catch (SQLException erro) {

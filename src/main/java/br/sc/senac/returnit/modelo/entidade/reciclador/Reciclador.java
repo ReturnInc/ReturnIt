@@ -1,5 +1,7 @@
 package br.sc.senac.returnit.modelo.entidade.reciclador;
 
+import br.sc.senac.returnit.modelo.entidade.contato.Contato;
+import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 public class Reciclador extends Usuario{
@@ -8,11 +10,11 @@ public class Reciclador extends Usuario{
 	private String genero_reciclador;
 	private long id_usuario;
 	
-	public Reciclador(String cpf_reciclador, String genero_reciclador, long id_usuario) {
-		super();
-		setCpf_reciclador(cpf_reciclador);
-		setGenero_reciclador(genero_reciclador);
-		setId_usuario(id_usuario);
+	public Reciclador(String cpfReciclador, String generoReciclador, long idUsuario, String nome,  Endereco endereco, Contato contato, String senha) {
+		super(idUsuario, nome,  endereco, contato, senha);
+		setCpf_reciclador(cpfReciclador);
+		setGenero_reciclador(generoReciclador);
+		setId_usuario(idUsuario);
 	}
 	public String getCpf_reciclador() {
 		return cpf_reciclador;

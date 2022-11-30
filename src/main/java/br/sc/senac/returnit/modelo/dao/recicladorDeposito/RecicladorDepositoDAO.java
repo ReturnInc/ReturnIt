@@ -4,7 +4,7 @@ import java.util.List;
 
 import br.sc.senac.returnit.modelo.entidade.RecicladorDeposito.RecicladorDeposito;
 
-public interface recicladorDepositoDAO {
+public interface RecicladorDepositoDAO {
 
 	public void inserirRecicladorDeposito(RecicladorDeposito recicladorDeposito);
 

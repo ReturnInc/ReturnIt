@@ -101,8 +101,9 @@ public class WebServentRouteReciclador extends HttpServlet {
 		private void inserirEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			
-			String cnpj = request.getParameter("cnpj");
+			String cpfReciclador = request.getParameter("cpf");
 			String nome = request.getParameter("nome");
+			String generoReciclador = request.getParameter("nome");
 			String telefoneContato = request.getParameter("telefone");
 			String emailContato = request.getParameter("email");
 			String numeroEnderecoStr = request.getParameter("numero");
@@ -116,7 +117,7 @@ public class WebServentRouteReciclador extends HttpServlet {
 			Contato contato = new Contato((long) -1, telefoneContato, emailContato);
 			Endereco endereco = new Endereco((long) -1, numeroEndereco, logradouroEndereco, complementoEndereco, bairroEndereco);
 			
-			dao.inserirEmpresa(new Empresa((long) -1, (long) -1, nome, endereco, contato,  cnpj, senha));
+			dao.inserirReciclador(new Reciclador(cpfReciclador, generoReciclador, (long) -1, nome , endereco, contato, senha));
 			response.sendRedirect("listar");
 		}
 

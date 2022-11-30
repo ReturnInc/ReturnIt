@@ -17,7 +17,7 @@ import br.sc.senac.returnit.modelo.dao.deposito.DepositoDAOImp;
 
 import br.sc.senac.returnit.modelo.entidade.deposito.Deposito;
 
-
+@WebServlet("/Deposito")
 public class WebServentRouteDeposito extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -41,23 +41,23 @@ public class WebServentRouteDeposito extends HttpServlet {
 				
 		switch (action) {
 				
-		case "/novo":
+		case "/DepositoNovo":
 			mostrarFormularioNovoDeposito(request, response);
 		break;
 					
-		case "/inserir":
+		case "/DepositoInserir":
 			inserirDeposito(request, response);
 		break;
 					
-		case "/deletar":
+		case "/DepositoDeletar":
 			deletarDeposito(request, response);
 		break;
 					
-		case "/editar":
+		case "/DepositoEditar":
 			mostrarFormularioEditarDeposito(request, response);
 		break;
 					
-		case "/atualizar":
+		case "/DepositoAtualizar":
 			atualizarDeposito(request, response);
 		break;
 					
@@ -75,14 +75,14 @@ public class WebServentRouteDeposito extends HttpServlet {
 				
 				List<Deposito> depositos = dao.recuperarDepositos();
 				request.setAttribute("Depositos", depositos);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-deposito.jsp");
 				dispatcher.forward(request, response);
 			}
 
 		private void mostrarFormularioNovoDeposito(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-deposito.jsp");
 				dispatcher.forward(request, response);
 			}
 
@@ -92,7 +92,7 @@ public class WebServentRouteDeposito extends HttpServlet {
 			long id = Long.parseLong(request.getParameter("id"));
 				Deposito deposito = dao.recuperarDepositoId(id);
 				request.setAttribute("Deposito", deposito);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-deposito.jsp");
 				dispatcher.forward(request, response);
 			}
 

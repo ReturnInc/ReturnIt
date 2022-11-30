@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
@@ -190,8 +191,18 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        }
 	    }
 	}
-	
+
 	private Connection conectarBanco() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=Root");
+	}
+	@Override
+	public List<Reciclador> recuperarRecicladores() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Reciclador recuperarRecicladorCPF(String CPF) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

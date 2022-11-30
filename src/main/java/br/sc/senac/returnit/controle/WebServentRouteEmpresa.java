@@ -143,6 +143,7 @@ public class WebServentRouteEmpresa  extends HttpServlet {
 		dao.deletarEmpresa(empresa);
 		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 		Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
+		System.out.println(usuario);
 		response.sendRedirect("listar");
 	}
 	

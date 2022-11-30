@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import br.sc.senac.returnit.modelo.entidade.cooperado.Cooperado;
 
@@ -105,7 +106,7 @@ public class CooperadoDAOImpl implements CooperadoDAO {
 	}
 
 	@Override
-	public void atualizarcnpj(String novoCnpj,Cooperado cooperado) {
+	public void atualizarCnpj(String novoCnpj,Cooperado cooperado) {
 		
 		Connection conexao = null;
 		PreparedStatement update = null;
@@ -146,6 +147,19 @@ public class CooperadoDAOImpl implements CooperadoDAO {
 	
 	private Connection conectarBanco() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
+	}
+
+
+	@Override
+	public List<Cooperado> recuperarCooperados() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Cooperado recuperarCooperadoCnpj(String CooperadoCnpj) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

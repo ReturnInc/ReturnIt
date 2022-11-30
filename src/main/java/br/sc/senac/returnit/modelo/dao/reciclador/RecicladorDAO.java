@@ -1,5 +1,7 @@
 package br.sc.senac.returnit.modelo.dao.reciclador;
 
+import java.util.List;
+
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
 
 public interface RecicladorDAO {
@@ -13,4 +15,8 @@ public interface RecicladorDAO {
 	void atualizarGenero(Reciclador reciclador, String novoGenero);
 	
 	void atualizarIdUsuario(Reciclador reciclador, long novoIdUsuario);
+	
+	List<Reciclador> recuperarRecicladores();
+	
+	Reciclador recuperarRecicladorCPF(String CPF);
 }

@@ -16,7 +16,8 @@ import br.sc.senac.returnit.modelo.dao.agendamento.AgendamentoDAO;
 import br.sc.senac.returnit.modelo.dao.agendamento.AgendamentoDAOImp;
 import br.sc.senac.returnit.modelo.entidade.agendamento.Agendamento;
 
-public class WebServentRouteAgendamento {
+@WebServlet("/Agendamento")
+public class WebServentRouteAgendamento extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private AgendamentoDAO dao;
@@ -39,28 +40,28 @@ public class WebServentRouteAgendamento {
 				
 		switch (action) {
 				
-		case "/novo":
-			mostrarFormularioNovoContato(request, response);
+		case "/AgendamentoNovo":
+			mostrarFormularioNovoAgendamento(request, response);
 		break;
 					
-		case "/inserir":
-			inserirEmpresa(request, response);
+		case "/AgendamentoInserir":
+			inserirAgendamento(request, response);
 		break;
 					
-		case "/deletar":
-			deletarEmpresa(request, response);
+		case "/AgendamentoDeletar":
+			deletarAgendamento(request, response);
 		break;
 					
-		case "/editar":
-			mostrarFormularioEditarContato(request, response);
+		case "/AgendamentoEditar":
+			mostrarFormularioEditarAgendamento(request, response);
 		break;
 					
-		case "/atualizar":
-			atualizarEmpresa(request, response);
+		case "/AgendamentoAtualizar":
+			atualizarAgendamento(request, response);
 		break;
 					
 		default:
-			listarEmpresas(request, response);
+			listarAgendamentos(request, response);
 		break;
 			}
 
@@ -68,33 +69,33 @@ public class WebServentRouteAgendamento {
 			throw new ServletException(ex);
 		}
 		}
-	private void listarEmpresas(HttpServletRequest request, HttpServletResponse response)
+	private void listarAgendamentos(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Agendamento> empresas = dao.recuperarAgendamentos();
-				request.setAttribute("contatos", empresas);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
+				List<Agendamento> agendamentos = dao.recuperarAgendamentos();
+				request.setAttribute("contatos", agendamentos);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void mostrarFormularioNovoContato(HttpServletRequest request, HttpServletResponse response)
+		private void mostrarFormularioNovoAgendamento(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-agendamento.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void mostrarFormularioEditarContato(HttpServletRequest request, HttpServletResponse response)
+		private void mostrarFormularioEditarAgendamento(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));
 				Agendamento agendamento = dao.recuperarAgendamentoId(id);
 				request.setAttribute("Agendamento", agendamento);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-agendamento.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void inserirEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void inserirAgendamento(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			
 			String realizadoAgendamentoStr = request.getParameter("realizadoAgendamento");
@@ -110,7 +111,7 @@ public class WebServentRouteAgendamento {
 			response.sendRedirect("listar");
 		}
 
-		private void atualizarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void atualizarAgendamento(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));
 			String idCooperadoStr = request.getParameter("idCooperado");
@@ -127,7 +128,7 @@ public class WebServentRouteAgendamento {
 			response.sendRedirect("listar");
 		}
 
-		private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void deletarAgendamento(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));
 			Agendamento agendamento = dao.recuperarAgendamentoId(id);

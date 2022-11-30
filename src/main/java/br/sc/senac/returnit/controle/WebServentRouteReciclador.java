@@ -11,15 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAO;
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAO;
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
-import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
 
+@WebServlet("/Reciclador")
 public class WebServentRouteReciclador extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -43,24 +41,24 @@ public class WebServentRouteReciclador extends HttpServlet {
 				
 		switch (action) {
 				
-		case "/novo":
-			mostrarFormularioNovoContato(request, response);
+		case "/RecicladorNovo":
+			mostrarFormularioNovoReciclador(request, response);
 		break;
 					
-		case "/inserir":
-			inserirEmpresa(request, response);
+		case "/RecicladorInserir":
+			inserirReciclador(request, response);
 		break;
 					
-		case "/deletar":
-			deletarEmpresa(request, response);
+		case "/RecicladorDeletar":
+			deletarReciclador(request, response);
 		break;
 					
-		case "/editar":
-			mostrarFormularioEditarContato(request, response);
+		case "/RecicladorEditar":
+			mostrarFormularioEditarReciclador(request, response);
 		break;
 					
-		case "/atualizar":
-			atualizarEmpresa(request, response);
+		case "/RecicladorAtualizar":
+			atualizarReciclador(request, response);
 		break;
 					
 		default:
@@ -77,28 +75,28 @@ public class WebServentRouteReciclador extends HttpServlet {
 				
 				List<Reciclador> empresas = dao.recuperarRecicladores();
 				request.setAttribute("contatos", empresas);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-reciclador.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void mostrarFormularioNovoContato(HttpServletRequest request, HttpServletResponse response)
+		private void mostrarFormularioNovoReciclador(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-reciclador.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void mostrarFormularioEditarContato(HttpServletRequest request, HttpServletResponse response)
+		private void mostrarFormularioEditarReciclador(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
-				Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-				request.setAttribute("Empresa", empresa);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				String CPF = request.getParameter("CPF");
+				Reciclador reciclador = dao.recuperarRecicladorCPF(CPF);
+				request.setAttribute("reciclador", reciclador);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-reciclador.jsp");
 				dispatcher.forward(request, response);
 			}
 
-		private void inserirEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void inserirReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			
 			String cpfReciclador = request.getParameter("cpf");
@@ -121,23 +119,25 @@ public class WebServentRouteReciclador extends HttpServlet {
 			response.sendRedirect("listar");
 		}
 
-		private void atualizarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void atualizarReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
+			String CPF = request.getParameter("id");
 			String idUsuarioStr = request.getParameter("idUsuario");
-			String cnpjEmpresa = request.getParameter("cnpjEmpresa");
+			String cpfReciclador = request.getParameter("cpfReciclador");
+			String generoReciclador = request.getParameter("generoReciclador");
 			Long idUsuario = Long.valueOf(idUsuarioStr);
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.atualizarCnpjEmpresa(empresa, cnpjEmpresa);
-			dao.atualizarIdUsuario(empresa, idUsuario);
+			Reciclador reciclador = dao.recuperarRecicladorCPF(CPF);
+			dao.atualizarCpfReciclador(reciclador, cpfReciclador);
+			dao.atualizarGenero(reciclador, generoReciclador);
+			dao.atualizarIdUsuario(reciclador, idUsuario);
 			response.sendRedirect("listar");
 		}
 
-		private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void deletarReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.deletarEmpresa(empresa);
+			String CPF = request.getParameter("id");
+			Reciclador reciclador = dao.recuperarRecicladorCPF(CPF);
+			dao.deletarReciclador(reciclador);
 			response.sendRedirect("listar");
 		}
 		

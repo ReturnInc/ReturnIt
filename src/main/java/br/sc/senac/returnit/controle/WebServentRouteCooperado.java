@@ -12,12 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.sc.senac.returnit.modelo.dao.cooperado.*;
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAO;
-import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAOImp;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
-import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
+import br.sc.senac.returnit.modelo.entidade.cooperado.Cooperado;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 
+@WebServlet("/Cooperado")
 public class WebServentRouteCooperado extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -73,26 +72,26 @@ public class WebServentRouteCooperado extends HttpServlet {
 	private void listarEmpresas(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Empresa> empresas = dao();
-				request.setAttribute("contatos", empresas);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-contato.jsp");
+				List<Cooperado> cooperados = dao.recuperarCooperados();
+				request.setAttribute("contatos", cooperados);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-cooperado.jsp");
 				dispatcher.forward(request, response);
 			}
 
 		private void mostrarFormularioNovoContato(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-cooperado.jsp");
 				dispatcher.forward(request, response);
 			}
 
 		private void mostrarFormularioEditarContato(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
-				Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-				request.setAttribute("Empresa", empresa);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("form-contato.jsp");
+				String cnpj = request.getParameter("id");
+				Cooperado cooperado = dao.recuperarCooperadoCnpj(cnpj);
+				request.setAttribute("Cooperado", cooperado);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("form-cooperado.jsp");
 				dispatcher.forward(request, response);
 			}
 
@@ -114,27 +113,23 @@ public class WebServentRouteCooperado extends HttpServlet {
 			Contato contato = new Contato((long) -1, telefoneContato, emailContato);
 			Endereco endereco = new Endereco((long) -1, numeroEndereco, logradouroEndereco, complementoEndereco, bairroEndereco);
 			
-			dao.inserirEmpresa(new Empresa((long) -1, (long) -1, nome, endereco, contato,  cnpj, senha));
+			dao.inserirCooperado(new Cooperado((long) -1, nome, endereco, contato,  cnpj, senha));
 			response.sendRedirect("listar");
 		}
 
 		private void atualizarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
-			String idUsuarioStr = request.getParameter("idUsuario");
-			String cnpjEmpresa = request.getParameter("cnpjEmpresa");
-			Long idUsuario = Long.valueOf(idUsuarioStr);
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.atualizarCnpjEmpresa(empresa, cnpjEmpresa);
-			dao.atualizarIdUsuario(empresa, idUsuario);
+			String cnpj = request.getParameter("cnpj");
+			Cooperado cooperado = dao.recuperarCooperadoCnpj(cnpj);
+			dao.atualizarCnpj(cnpj, cooperado);
 			response.sendRedirect("listar");
 		}
 
 		private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
-			long id = Long.parseLong(request.getParameter("id"));
-			Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-			dao.deletarEmpresa(empresa);
+			String cnpj = request.getParameter("id");
+			Cooperado cooperado = dao.recuperarCooperadoCnpj(cnpj);
+			dao.deletarCooperado(cooperado);
 			response.sendRedirect("listar");
 		}
 		

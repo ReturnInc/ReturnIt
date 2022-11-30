@@ -16,6 +16,7 @@ import br.sc.senac.returnit.modelo.dao.retornavel.RetornavelDAO;
 import br.sc.senac.returnit.modelo.dao.retornavel.RetornavelDAOImp;
 import br.sc.senac.returnit.modelo.entidade.retornavel.Retornavel;
 
+@WebServlet("/Retornavel")
 public class WebServentRouteRetornavel extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

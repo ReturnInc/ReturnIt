@@ -15,5 +15,7 @@ public interface EmpresaDAO {
 
 		Empresa recuperarEmpresaIdUsuario(long IdUsuario);
 		
+		Empresa recuperarCnpjEmpresa(String cnpjEmpresa);
+		
 }
 

@@ -812,9 +812,74 @@ public class AgendamentoDAOImp implements AgendamentoDAO{
 
 	 return agendamento;
 	}
+	public List<Agendamento> recuperarAgendamentoRealizadosPeriodo(boolean realizado, Date dataInicio, Date dataFim) {
+		Connection conexao = null;
+		PreparedStatement consulta = null;
+	    ResultSet resultado = null;
+
+	    List<Agendamento> agendamentos = new ArrayList<Agendamento>();
+
+	    try {
+
+	        conexao = conectarBanco();
+	        consulta = conexao.prepareStatement("SELECT * FROM agendamento where  DAYOFMONTH(data_agendamento) <= ? and MONTH(data_agendamento)"
+	        		+ " <= ? and YEAR(data_agendamento) <= ? and DAYOFMONTH(data_agendamento) >= ? and MONTH(data_agendamento) >= ? and YEAR(data_agendamento) >= ?"
+	        		+ "realizado_agendamento");
+	        Calendar dataI =  Calendar.getInstance();
+	        Calendar dataF =  Calendar.getInstance();
+	        dataI.setTime(dataInicio);
+	        dataF.setTime(dataFim);
+	        consulta.setInt(1, dataI.get(Calendar.DAY_OF_MONTH));
+	        consulta.setInt(2, dataI.get(Calendar.MONTH));
+	        consulta.setInt(3, dataI.get(Calendar.YEAR));
+	        consulta.setInt(4, dataF.get(Calendar.DAY_OF_MONTH));
+	        consulta.setInt(5, dataF.get(Calendar.MONTH));
+	        consulta.setInt(6, dataF.get(Calendar.YEAR));
+	        consulta.setBoolean(7, realizado);
+	        resultado = consulta.executeQuery();
+	        Date dataAgendamento = null;
+	        while (resultado.next()) {
+
+	        	long idAgendamento = resultado.getLong("id_agendamento");
+	            boolean realizadoAgendamento = resultado.getBoolean("realizado_agendamento");
+	            long idEmpresa = resultado.getLong("id_empresa");
+	            dataAgendamento = resultado.getDate("data_agendamento");
+	            long idCooperado = resultado.getLong("id_cooperado");
+	            agendamentos.add(new Agendamento(idAgendamento, realizadoAgendamento, dataAgendamento, idEmpresa, idCooperado));
+	            
+
+	         
+	        }
+
+	    } catch (SQLException erro) {
+	        erro.printStackTrace();
+	    }
+
+	    finally {
+
+	        try {
+
+	            if (resultado != null)
+	                resultado.close();
+
+	            if (consulta != null)
+	                consulta.close();
+
+	            if (conexao != null)
+	                conexao.close();
+
+	        } catch (SQLException erro) {
+
+	            erro.printStackTrace();
+	        }
+	    }
+
+	    return agendamentos;
+	}
 		
 	
 private Connection conectarBanco() throws SQLException {
 	return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 }
+
 }

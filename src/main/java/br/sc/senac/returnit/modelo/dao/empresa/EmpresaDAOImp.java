@@ -233,7 +233,6 @@ public class EmpresaDAOImp implements EmpresaDAO {
 			Endereco endereco = usuario.getEndereco();
 			Contato contato = usuario.getContato();
 			empresa = new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha());
-					empresa.setCnpj(cnpj);
 
 						empresa.setId(idUsuario);
 		} catch (SQLException erro) {
@@ -261,7 +260,7 @@ public class EmpresaDAOImp implements EmpresaDAO {
 
 		return empresa;
 	}
-	public Empresa recuperarEmpresaIdEmpresa(long idEmpresa) {
+	public Empresa recuperarCnpjEmpresa(String cnpjEmpresa) {
 		
 		Connection conexao = null;
 		PreparedStatement consulta = null;
@@ -271,17 +270,16 @@ public class EmpresaDAOImp implements EmpresaDAO {
 		try {
 
 			conexao = conectarBanco();
-			consulta = conexao.prepareStatement("SELECT * FROM empresa where id_usuario = ?");
-			consulta.setLong(1, idEmpresa);
+			consulta = conexao.prepareStatement("SELECT * FROM empresa where cnpj_empresa = ?");
+			consulta.setString(1, cnpjEmpresa);
 			resultado = consulta.executeQuery();
 
-			String cnpj = resultado.getString("cnpj_empresa");
+			long idEmpresa = resultado.getLong("id_empresa");
 			long idUsuario = resultado.getLong("id_Usuario");
 			Usuario usuario = usuarioDAO.recuperarIdUsuario(idUsuario);
 			Endereco endereco = usuario.getEndereco();
 			Contato contato = usuario.getContato();
-			empresa = new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha());
-					empresa.setCnpj(cnpj);
+			empresa = new Empresa(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpjEmpresa, usuario.getSenha());
 
 						empresa.setId(idUsuario);
 		} catch (SQLException erro) {

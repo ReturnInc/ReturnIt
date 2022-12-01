@@ -37,6 +37,8 @@ public interface AgendamentoDAO {
     
     List<Agendamento> recuperarAgendamentoRealizados(boolean realizado);
     
+    List<Agendamento> recuperarAgendamentoRealizadosPeriodo(boolean realizado,  Date dataInicio, Date dataFim);
+    
     Agendamento recuperarAgendamentoId(long idAgendamento);
 
 }

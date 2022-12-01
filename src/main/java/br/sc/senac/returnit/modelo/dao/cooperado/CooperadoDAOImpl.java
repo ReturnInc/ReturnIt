@@ -7,7 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
+import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.cooperado.Cooperado;
+import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
+import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 public class CooperadoDAOImpl implements CooperadoDAO {
 
@@ -142,7 +146,52 @@ public class CooperadoDAOImpl implements CooperadoDAO {
 		}
 		
 	}
+	public Cooperado recuperarCooperadoIdUsuario(long idUsuario) {
+		
+		Connection conexao = null;
+		PreparedStatement consulta = null;
+		ResultSet resultado = null;
+		Cooperado cooperado = null;
+		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+		try {
 
+			conexao = conectarBanco();
+			consulta = conexao.prepareStatement("SELECT * FROM cooperado where id_usuario = ?");
+			consulta.setLong(1, idUsuario);
+			resultado = consulta.executeQuery();
+
+			String cnpj = resultado.getString("cnpj_cooperado");
+			long idEmpresa = resultado.getLong("id_cooperado");
+			Usuario usuario = usuarioDAO.recuperarIdUsuario(idUsuario);
+			Endereco endereco = usuario.getEndereco();
+			Contato contato = usuario.getContato();
+			cooperado = new Cooperado(idEmpresa, idUsuario, usuario.getNome(), endereco, contato, cnpj, usuario.getSenha());
+			
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		}
+
+		return cooperado;
+	}
 	
 	
 	private Connection conectarBanco() throws SQLException {

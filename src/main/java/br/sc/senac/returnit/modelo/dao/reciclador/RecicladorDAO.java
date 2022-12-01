@@ -19,4 +19,6 @@ public interface RecicladorDAO {
 	List<Reciclador> recuperarRecicladores();
 	
 	Reciclador recuperarRecicladorCPF(String CPF);
+	
+	Reciclador recuperarRecicladorIdUsuario(long idUsuario);
 }

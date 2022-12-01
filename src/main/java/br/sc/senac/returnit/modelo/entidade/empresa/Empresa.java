@@ -28,4 +28,7 @@ public class Empresa extends Usuario {
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
+	public Boolean checkSenha(String senha) {
+			return senha == this.getSenha();
+	}
 }

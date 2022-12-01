@@ -8,13 +8,13 @@ public class Reciclador extends Usuario{
 	
 	private String cpf_reciclador;
 	private String genero_reciclador;
-	private long id_usuario;
+	private long idReciclador;
 	
-	public Reciclador(String cpfReciclador, String generoReciclador, long idUsuario, String nome,  Endereco endereco, Contato contato, String senha) {
+	public Reciclador(long idRecicaldor,  long idUsuario, String cpfReciclador, String generoReciclador, String nome,  Endereco endereco, Contato contato, String senha) {
 		super(idUsuario, nome,  endereco, contato, senha);
 		setCpf_reciclador(cpfReciclador);
 		setGenero_reciclador(generoReciclador);
-		setId_usuario(idUsuario);
+		this.idReciclador = idRecicaldor;
 	}
 	public String getCpf_reciclador() {
 		return cpf_reciclador;
@@ -28,11 +28,11 @@ public class Reciclador extends Usuario{
 	public void setGenero_reciclador(String genero_reciclador) {
 		this.genero_reciclador = genero_reciclador;
 	}
-	public long getId_usuario() {
-		return id_usuario;
+	public long getIdReciclador() {
+		return idReciclador;
 	}
-	public void setId_usuario(long idUsuario) {
-		this.id_usuario = idUsuario;
+	public void setIdReciclador(long idUsuario) {
+		this.idReciclador = idUsuario;
 	}
 	public enum Genero {
 		

@@ -13,15 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAO;
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAOImpl;
+import br.sc.senac.returnit.modelo.dao.recicladorDeposito.RecicladorDepositoDAO;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
+import br.sc.senac.returnit.modelo.entidade.RecicladorDeposito.RecicladorDeposito;
+import br.sc.senac.returnit.modelo.entidade.agendamentoRetornavel.AgendamentoRetornavel;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
+import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
+import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 @WebServlet("/Reciclador")
 public class WebServentRouteReciclador extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private RecicladorDAO dao;
+	private UsuarioDAO usuarioDAO;
+	private RecicladorDepositoDAO recicladorDepositoDAO;
 
 	public void init() {
 		dao = new RecicladorDAOImpl();
@@ -47,6 +56,7 @@ public class WebServentRouteReciclador extends HttpServlet {
 					
 		case "/RecicladorInserir":
 			inserirReciclador(request, response);
+			inserirAgendamentoRetornavel(request, response);
 		break;
 					
 		case "/RecicladorDeletar":
@@ -55,6 +65,10 @@ public class WebServentRouteReciclador extends HttpServlet {
 					
 		case "/RecicladorEditar":
 			mostrarFormularioEditarReciclador(request, response);
+		break;
+		
+		case "/RecicladorLogar":
+			logarReciclador(request, response);
 		break;
 					
 		case "/RecicladorAtualizar":
@@ -73,8 +87,9 @@ public class WebServentRouteReciclador extends HttpServlet {
 	private void listarRecicladores(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 				
-				List<Reciclador> empresas = dao.recuperarRecicladores();
-				request.setAttribute("contatos", empresas);
+				List<Reciclador> recicladores = dao.recuperarRecicladores();
+				recicladorDepositoDAO.recuperarDepositosRealizadosIdReciclador();
+				request.setAttribute("Recicladores", recicladores);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-reciclador.jsp");
 				dispatcher.forward(request, response);
 			}
@@ -115,7 +130,7 @@ public class WebServentRouteReciclador extends HttpServlet {
 			Contato contato = new Contato((long) -1, telefoneContato, emailContato);
 			Endereco endereco = new Endereco((long) -1, numeroEndereco, logradouroEndereco, complementoEndereco, bairroEndereco);
 			
-			dao.inserirReciclador(new Reciclador(cpfReciclador, generoReciclador, (long) -1, nome , endereco, contato, senha));
+			dao.inserirReciclador(new Reciclador((long) -1, (long) -1,cpfReciclador, generoReciclador,  nome , endereco, contato, senha));
 			response.sendRedirect("listar");
 		}
 
@@ -130,6 +145,26 @@ public class WebServentRouteReciclador extends HttpServlet {
 			dao.atualizarCpfReciclador(reciclador, cpfReciclador);
 			dao.atualizarGenero(reciclador, generoReciclador);
 			dao.atualizarIdUsuario(reciclador, idUsuario);
+			response.sendRedirect("listar");
+		}
+		private void logarReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			
+			String nomeUsuario = request.getParameter("nome");
+			Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
+			long id = usuario.getId();
+			Reciclador reciclador = dao.recuperarRecicladorIdUsuario(id);
+			response.sendRedirect("listar");
+		}
+		private void inserirAgendamentoRetornavel(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			
+        	String idRecicladorStr = request.getParameter("idCooperado");
+			String idDepositoStr = request.getParameter("idEmpresa");
+			
+			 
+			
+			Long idReciclador = Long.valueOf(idRecicladorStr);
+			Long idDeposito = Long.valueOf(idDepositoStr);
+			recicladorDepositoDAO.inserirRecicladorDeposito(new RecicladorDeposito( idReciclador, idDeposito));
 			response.sendRedirect("listar");
 		}
 

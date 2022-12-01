@@ -12,15 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.sc.senac.returnit.modelo.dao.cooperado.*;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.cooperado.Cooperado;
+import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
+import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 @WebServlet("/Cooperado")
 public class WebServentRouteCooperado extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private CooperadoDAO dao;
+	private UsuarioDAO usuarioDAO;
 
 	public void init() {
 		dao = new CooperadoDAOImpl();
@@ -40,23 +45,27 @@ public class WebServentRouteCooperado extends HttpServlet {
 				
 		switch (action) {
 				
-		case "/novo":
+		case "/CooperadoNovo":
 			mostrarFormularioNovoContato(request, response);
 		break;
 					
-		case "/inserir":
+		case "/CooperadoInserir":
 			inserirEmpresa(request, response);
 		break;
 					
-		case "/deletar":
+		case "/Cooperadodeletar":
 			deletarEmpresa(request, response);
 		break;
+		
+		case "/CooperadoLogar":
+			logarCooperado(request, response);
+		break;
 					
-		case "/editar":
+		case "/CooperadoEditar":
 			mostrarFormularioEditarContato(request, response);
 		break;
 					
-		case "/atualizar":
+		case "/CooperadoAtualizar":
 			atualizarEmpresa(request, response);
 		break;
 					
@@ -113,7 +122,7 @@ public class WebServentRouteCooperado extends HttpServlet {
 			Contato contato = new Contato((long) -1, telefoneContato, emailContato);
 			Endereco endereco = new Endereco((long) -1, numeroEndereco, logradouroEndereco, complementoEndereco, bairroEndereco);
 			
-			dao.inserirCooperado(new Cooperado((long) -1, nome, endereco, contato,  cnpj, senha));
+			dao.inserirCooperado(new Cooperado((long) -1, (long) -1, nome, endereco, contato,  cnpj, senha));
 			response.sendRedirect("listar");
 		}
 
@@ -122,6 +131,14 @@ public class WebServentRouteCooperado extends HttpServlet {
 			String cnpj = request.getParameter("cnpj");
 			Cooperado cooperado = dao.recuperarCooperadoCnpj(cnpj);
 			dao.atualizarCnpj(cnpj, cooperado);
+			response.sendRedirect("listar");
+		}
+		private void logarCooperado(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			
+			String nomeUsuario = request.getParameter("nome");
+			Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
+			long id = usuario.getId();
+			Cooperado coperado = dao.recuperarCooperadoIdUsuario(id);
 			response.sendRedirect("listar");
 		}
 

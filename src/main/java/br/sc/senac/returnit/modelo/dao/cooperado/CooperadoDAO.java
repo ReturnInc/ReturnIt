@@ -17,5 +17,6 @@ List<Cooperado> recuperarCooperados();
 
 Cooperado recuperarCooperadoCnpj(String CooperadoCnpj);
 	
+Cooperado recuperarCooperadoIdUsuario(long idUsuario);
 
 }

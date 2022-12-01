@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.sc.senac.returnit.modelo.dao.agendamento.AgendamentoDAO;
 import br.sc.senac.returnit.modelo.dao.agendamento.AgendamentoDAOImp;
+import br.sc.senac.returnit.modelo.dao.agendamentoRetornavel.AgendamentoRetornavelDAO;
 import br.sc.senac.returnit.modelo.dao.empresa.EmpresaDAO;
 import br.sc.senac.returnit.modelo.entidade.agendamento.Agendamento;
+import br.sc.senac.returnit.modelo.entidade.agendamentoRetornavel.AgendamentoRetornavel;
 import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 
 @WebServlet("/Agendamento")
@@ -24,6 +26,7 @@ public class WebServentRouteAgendamento extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AgendamentoDAO dao;
 	private EmpresaDAO empresaDao;
+	private AgendamentoRetornavelDAO agendamentoRetornavelDAO;
 	public void init() {
 		dao = new AgendamentoDAOImp();
 	}
@@ -48,6 +51,7 @@ public class WebServentRouteAgendamento extends HttpServlet {
 					
 		case "/AgendamentoInserir":
 			inserirAgendamento(request, response);
+			inserirAgendamentoRetornavel(request, response);
 		break;
 					
 		case "/AgendamentoDeletar":
@@ -117,17 +121,17 @@ public class WebServentRouteAgendamento extends HttpServlet {
 				}
 				else if(request.getParameter("realisado") != "" ) {
 					if(request.getParameter("periodo") != "") {
-						Empresa empresa = empresaDao.recuperarCnpjEmpresa(request.getParameter("cnpj"));
-						long id = empresa.getId();
-						List<Agendamento> agendamentos = dao.recuperarAgendamentoIdEmpresa(id);
+						boolean realizado = Boolean.parseBoolean(request.getParameter("realizado"));
+						Date dataInicio = Date.valueOf(request.getParameter("dataInicio"));
+						Date dataFim = Date.valueOf(request.getParameter("dataFim"));
+						List<Agendamento> agendamentos = dao.recuperarAgendamentoRealizadosPeriodo(realizado, dataInicio, dataFim);
 						request.setAttribute("contatos", agendamentos);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
 						dispatcher.forward(request, response);
 					}
 					else {
-						Empresa empresa = empresaDao.recuperarCnpjEmpresa(request.getParameter("cnpj"));
-						long id = empresa.getId();
-						List<Agendamento> agendamentos = dao.recuperarAgendamentoIdEmpresa(id);
+						boolean realizado = Boolean.parseBoolean(request.getParameter("realizado"));
+						List<Agendamento> agendamentos = dao.recuperarAgendamentoRealizados(realizado);
 						request.setAttribute("contatos", agendamentos);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
 						dispatcher.forward(request, response);
@@ -136,19 +140,27 @@ public class WebServentRouteAgendamento extends HttpServlet {
 					
 				}
 				else if(request.getParameter("periodo") != "") {
-					Empresa empresa = empresaDao.recuperarCnpjEmpresa(request.getParameter("cnpj"));
-					long id = empresa.getId();
-					List<Agendamento> agendamentos = dao.recuperarAgendamentoIdEmpresa(id);
+					Date dataInicio = Date.valueOf(request.getParameter("dataInicio"));
+					Date dataFim = Date.valueOf(request.getParameter("dataFim"));
+					List<Agendamento> agendamentos = dao.recuperarAgendamentoPeriodo(dataInicio, dataFim);
 					request.setAttribute("contatos", agendamentos);
 					RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
 					dispatcher.forward(request, response);
 				}
-				else {
-				List<Agendamento> agendamentos = dao.recuperarAgendamentos();
+				else if(request.getParameter("data") != "") {
+				List<Agendamento> agendamentos = dao.recuperarAgendamentoDataAtual();
 				request.setAttribute("contatos", agendamentos);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
 				dispatcher.forward(request, response);
-			}}
+			}
+				else {
+					List<Agendamento> agendamentos = dao.recuperarAgendamentos();
+					request.setAttribute("contatos", agendamentos);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("listar-agendamento.jsp");
+					dispatcher.forward(request, response);
+				}
+			
+				}
 
 		private void mostrarFormularioNovoAgendamento(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -182,7 +194,19 @@ public class WebServentRouteAgendamento extends HttpServlet {
 			dao.inserirAgendamento(new Agendamento((long) -1,realizadoAgendamento, dataAgendamento, idEmpresa, idCooperado));
 			response.sendRedirect("listar");
 		}
-
+        private void inserirAgendamentoRetornavel(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			
+        	int quantidade = Integer.parseInt(request.getParameter("quantidade"));
+        	String idRetornavelStr = request.getParameter("idCooperado");
+			String idAgendamentostr = request.getParameter("idEmpresa");
+			
+			 
+			
+			Long idAgendamento = Long.valueOf(idAgendamentostr);
+			Long idRetornavel = Long.valueOf(idRetornavelStr);
+			agendamentoRetornavelDAO.inserirAgendamentoRetornavel(new AgendamentoRetornavel(quantidade, idRetornavel, idAgendamento));
+			response.sendRedirect("listar");
+		}
 		private void atualizarAgendamento(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 				
 			long id = Long.parseLong(request.getParameter("id"));

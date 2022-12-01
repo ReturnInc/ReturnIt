@@ -10,7 +10,10 @@ public interface RecicladorDepositoDAO {
 
 	public void deletarRecicladorDeposito(RecicladorDeposito recicladorDeposito);
 	
-	List<RecicladorDeposito> recuperarDepositosRealizados();
-
+	List<RecicladorDeposito> recuperarDepositosIdReciclador(long idReciclador);
+	
+	List<RecicladorDeposito> recuperarDepositosCpfReciclador(String cpf);
+	
+	List<RecicladorDeposito> recuperarDepositosNomeReciclador(String nome);
 	
 }

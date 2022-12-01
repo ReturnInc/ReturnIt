@@ -16,13 +16,14 @@ import br.sc.senac.returnit.modelo.entidade.empresa.*;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 import br.sc.senac.returnit.modelo.dao.empresa.*;
-import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
 
-@WebServlet("/")
+@WebServlet("/Empresa")
 public class WebServentRouteEmpresa  extends HttpServlet {
 		
 	private static final long serialVersionUID = 1L;
 	private EmpresaDAO dao;
+	private UsuarioDAO usuarioDAO;
 
 	public void init() {
 		dao = new EmpresaDAOImp();
@@ -42,26 +43,27 @@ public class WebServentRouteEmpresa  extends HttpServlet {
 				
 		switch (action) {
 				
-		case "/CadastrarEmpresa":
+		case "/EmpresaCadastrar":
 			mostrarFormularioNovoEmpresa(request, response);
 		break;
 					
-		case "/inserirEmpresa":
+		case "/EmpresaInserir":
 			inserirEmpresa(request, response);
 		break;
 					
-		case "/deletarEmpresa":
+		case "/EmpresaDeletar":
 			deletarEmpresa(request, response);
 		break;
 					
-		case "/editarEmpresa":
+		case "/EmpresaEditar":
 			mostrarFormularioEditarEmpresa(request, response);
 		break;
 					
-		case "/logarEmpresa":
+		case "/EmpresaLogar":
 			logarEmpresa(request, response);
 		break;
-		case "/atualizarEmpresa":
+		
+		case "/EmpresaAtualizar":
 			atualizarEmpresa(request, response);
 		break;
 					
@@ -137,14 +139,12 @@ public class WebServentRouteEmpresa  extends HttpServlet {
 
 	private void logarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		
-		long id = Long.parseLong(request.getParameter("id"));
 		String nomeUsuario = request.getParameter("nome");
-		Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-		dao.deletarEmpresa(empresa);
-		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 		Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
-		System.out.println(usuario);
-		response.sendRedirect("listar");
+		long id = usuario.getId();
+		Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
+		if (empresa.checkSenha(usuario.getSenha()))
+			response.sendRedirect("listar");
 	}
 	
 	private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

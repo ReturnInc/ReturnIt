@@ -6,12 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.sc.senac.returnit.modelo.dao.deposito.DepositoDAO;
+import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAO;
+import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
 import br.sc.senac.returnit.modelo.entidade.RecicladorDeposito.RecicladorDeposito;
+import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
+import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 
 public class RecicladorDepositoDAOImp implements RecicladorDepositoDAO{
+	private RecicladorDAO recicladorDAO;
+	private DepositoDAO depositoDAO;
+	private UsuarioDAO usuarioDAO;
 
-	@Override
 	public void inserirRecicladorDeposito(RecicladorDeposito recicladorDeposito) {
 		Connection conexao = null;
 		PreparedStatement insert = null;
@@ -49,15 +56,27 @@ public class RecicladorDepositoDAOImp implements RecicladorDepositoDAO{
 	private Connection conectarBanco() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://localhost/returnit?user=root&password=root");
 	}
-	@Override
+	
 	public void deletarRecicladorDeposito(RecicladorDeposito recicladorDeposito) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public List<RecicladorDeposito> recuperarDepositosRealizados() {
+
+	public List<RecicladorDeposito> recuperarDepositosIdReciclador(long idReciclador) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public List<RecicladorDeposito> recuperarDepositosCpfReciclador(String cpf) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<RecicladorDeposito> recuperarDepositosNomeReciclador(String nome) {
+		Usuario usuario = usuarioDAO.recuperarNome(nome);
+		long id = usuario.getId(); 
+		Reciclador reciclador = recicladorDAO.recuperarRecicladorIdUsuario(id);
+		long idReciclador = reciclador.getIdReciclador();
+		RecicladorDeposito recicladorDeposito = this.recuperarDepositosIdReciclador(idReciclador);
+		
 	}
 
 }

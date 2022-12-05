@@ -26,7 +26,7 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        
 	        insert.setString(1, reciclador.getCpf_reciclador());
 	        insert.setString(2, reciclador.getGenero_reciclador());
-	        insert.setLong(3, reciclador.getId_usuario());
+	        insert.setLong(3, reciclador.getId());
 	        
 			insert.execute();
 
@@ -60,12 +60,12 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        conexao = conectarBanco();
 	        delete = conexao.prepareStatement("DELETE FROM reciclador WHERE id_usuario = ?");
 	        
-	        delete.setLong(1, reciclador.getId_usuario());
+	        delete.setLong(1, reciclador.getId());
 	        
 	        delete.execute();
 	        
 			UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
-			Usuario usuario = usuarioDAO.recuperarIdUsuario(reciclador.getId_usuario());
+			Usuario usuario = usuarioDAO.recuperarIdUsuario(reciclador.getId());
 			usuarioDAO.deletarUsuario(usuario);
 			
 	        
@@ -100,7 +100,7 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        update = conexao.prepareStatement("UPDATE reciclador SET cpf_reciclador = ? WHERE id_usuario = ?");
 	        
 	        update.setString(1, novoCpfReciclador);
-	        update.setLong(2, reciclador.getId_usuario());
+	        update.setLong(2, reciclador.getId());
 
 	        update.execute();
 
@@ -135,7 +135,7 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        update = conexao.prepareStatement("UPDATE usuario SET cpf_reciclador = ? WHERE id_usuario = ?");
 	        
 	        update.setString(1, novoGenero);
-	        update.setLong(2, reciclador.getId_usuario());
+	        update.setLong(2, reciclador.getId());
 
 	        update.execute();
 
@@ -170,7 +170,7 @@ public class RecicladorDAOImpl implements RecicladorDAO{
 	        update = conexao.prepareStatement("UPDATE usuario SET cpf_reciclador = ? WHERE id_usuario = ?");
 	        
 	        update.setLong(1, novoIdUsuario);
-	        update.setLong(2, reciclador.getId_usuario());
+	        update.setLong(2, reciclador.getId());
 
 	        update.execute();
 

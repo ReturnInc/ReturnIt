@@ -13,10 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.sc.senac.returnit.modelo.dao.cooperado.*;
 import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
-import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
 import br.sc.senac.returnit.modelo.entidade.cooperado.Cooperado;
-import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
@@ -133,13 +131,15 @@ public class WebServentRouteCooperado extends HttpServlet {
 			dao.atualizarCnpj(cnpj, cooperado);
 			response.sendRedirect("listar");
 		}
-		private void logarCooperado(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void logarCooperado(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 			
 			String nomeUsuario = request.getParameter("nome");
 			Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
 			long id = usuario.getId();
-			Cooperado coperado = dao.recuperarCooperadoIdUsuario(id);
-			response.sendRedirect("listar");
+			Cooperado cooperado = dao.recuperarCooperadoIdUsuario(id);
+			request.setAttribute("Cooperado", cooperado);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Cooperado.jsp");
+			dispatcher.forward(request, response);
 		}
 
 		private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

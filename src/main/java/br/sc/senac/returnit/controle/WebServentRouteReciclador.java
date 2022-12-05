@@ -15,11 +15,8 @@ import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAO;
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAOImpl;
 import br.sc.senac.returnit.modelo.dao.recicladorDeposito.RecicladorDepositoDAO;
 import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
-import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAOImpl;
 import br.sc.senac.returnit.modelo.entidade.RecicladorDeposito.RecicladorDeposito;
-import br.sc.senac.returnit.modelo.entidade.agendamentoRetornavel.AgendamentoRetornavel;
 import br.sc.senac.returnit.modelo.entidade.contato.Contato;
-import br.sc.senac.returnit.modelo.entidade.empresa.Empresa;
 import br.sc.senac.returnit.modelo.entidade.endereco.Endereco;
 import br.sc.senac.returnit.modelo.entidade.reciclador.Reciclador;
 import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
@@ -88,8 +85,15 @@ public class WebServentRouteReciclador extends HttpServlet {
 			throws SQLException, IOException, ServletException {
 				
 				List<Reciclador> recicladores = dao.recuperarRecicladores();
-				recicladorDepositoDAO.recuperarDepositosRealizadosIdReciclador();
-				request.setAttribute("Recicladores", recicladores);
+				List<RecicladorDeposito> recicladorDeposito = null;
+				for(Reciclador reciclador:recicladores) {
+					long idReciclador = reciclador.getIdReciclador();
+					recicladorDeposito = recicladorDepositoDAO.recuperarDepositosIdReciclador(idReciclador);
+					request.setAttribute("Reciclador", reciclador);
+					request.setAttribute("RecicladorDeposito", recicladorDeposito);
+				}
+				
+		
 				RequestDispatcher dispatcher = request.getRequestDispatcher("listar-reciclador.jsp");
 				dispatcher.forward(request, response);
 			}
@@ -147,20 +151,20 @@ public class WebServentRouteReciclador extends HttpServlet {
 			dao.atualizarIdUsuario(reciclador, idUsuario);
 			response.sendRedirect("listar");
 		}
-		private void logarReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		private void logarReciclador(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 			
 			String nomeUsuario = request.getParameter("nome");
 			Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
 			long id = usuario.getId();
 			Reciclador reciclador = dao.recuperarRecicladorIdUsuario(id);
-			response.sendRedirect("listar");
+			request.setAttribute("Reciclador", reciclador);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("reciclador.jsp");
+			dispatcher.forward(request, response);
 		}
 		private void inserirAgendamentoRetornavel(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 			
         	String idRecicladorStr = request.getParameter("idCooperado");
 			String idDepositoStr = request.getParameter("idEmpresa");
-			
-			 
 			
 			Long idReciclador = Long.valueOf(idRecicladorStr);
 			Long idDeposito = Long.valueOf(idDepositoStr);

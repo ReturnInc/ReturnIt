@@ -137,14 +137,15 @@ public class WebServentRouteEmpresa  extends HttpServlet {
 		response.sendRedirect("listar");
 	}
 
-	private void logarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void logarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		
 		String nomeUsuario = request.getParameter("nome");
 		Usuario usuario = usuarioDAO.recuperarNome(nomeUsuario);
 		long id = usuario.getId();
 		Empresa empresa = dao.recuperarEmpresaIdUsuario(id);
-		if (empresa.checkSenha(usuario.getSenha()))
-			response.sendRedirect("listar");
+		request.setAttribute("Empresa", empresa);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("empresa.jsp");
+		dispatcher.forward(request, response);
 	}
 	
 	private void deletarEmpresa(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

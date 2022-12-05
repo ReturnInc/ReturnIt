@@ -3,10 +3,11 @@ package br.sc.senac.returnit.modelo.dao.recicladorDeposito;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import br.sc.senac.returnit.modelo.dao.deposito.DepositoDAO;
+
 import br.sc.senac.returnit.modelo.dao.reciclador.RecicladorDAO;
 import br.sc.senac.returnit.modelo.dao.usuario.UsuarioDAO;
 import br.sc.senac.returnit.modelo.entidade.RecicladorDeposito.RecicladorDeposito;
@@ -16,7 +17,6 @@ import br.sc.senac.returnit.modelo.entidade.usuario.Usuario;
 
 public class RecicladorDepositoDAOImp implements RecicladorDepositoDAO{
 	private RecicladorDAO recicladorDAO;
-	private DepositoDAO depositoDAO;
 	private UsuarioDAO usuarioDAO;
 
 	public void inserirRecicladorDeposito(RecicladorDeposito recicladorDeposito) {
@@ -63,20 +63,59 @@ public class RecicladorDepositoDAOImp implements RecicladorDepositoDAO{
 	}
 
 	public List<RecicladorDeposito> recuperarDepositosIdReciclador(long idReciclador) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conexao = null;
+		PreparedStatement consulta = null;
+		ResultSet resultado = null;
+		List<RecicladorDeposito> recicladorDeposito = null;
+		try {
+
+			conexao = conectarBanco();
+			consulta = conexao.prepareStatement("SELECT * FROM reciclador_deposito where id_reciclador = ?");
+			consulta.setLong(1, idReciclador);
+			resultado = consulta.executeQuery();
+			while(resultado.next()) {
+
+				long idDeposito = resultado.getLong("id_deposito");
+				recicladorDeposito.add(new RecicladorDeposito(idReciclador, idDeposito));
+			}
+		} catch (SQLException erro) {
+			erro.printStackTrace();
+		}
+
+		finally {
+
+			try {
+
+				if (resultado != null)
+					resultado.close();
+
+				if (consulta != null)
+					consulta.close();
+
+				if (conexao != null)
+					conexao.close();
+
+			} catch (SQLException erro) {
+
+				erro.printStackTrace();
+			}
+		 }
+
+		return recicladorDeposito;
 	}
 	public List<RecicladorDeposito> recuperarDepositosCpfReciclador(String cpf) {
-		// TODO Auto-generated method stub
-		return null;
+		Reciclador reciclador = recicladorDAO.recuperarRecicladorCPF(cpf);
+		long idReciclador = reciclador.getIdReciclador();
+		List<RecicladorDeposito> recicladorDeposito = this.recuperarDepositosIdReciclador(idReciclador);
+		return recicladorDeposito;
 	}
 	public List<RecicladorDeposito> recuperarDepositosNomeReciclador(String nome) {
 		Usuario usuario = usuarioDAO.recuperarNome(nome);
 		long id = usuario.getId(); 
 		Reciclador reciclador = recicladorDAO.recuperarRecicladorIdUsuario(id);
 		long idReciclador = reciclador.getIdReciclador();
-		RecicladorDeposito recicladorDeposito = this.recuperarDepositosIdReciclador(idReciclador);
-		
+		List<RecicladorDeposito> recicladorDeposito = this.recuperarDepositosIdReciclador(idReciclador);
+		return recicladorDeposito;
 	}
 
 }
